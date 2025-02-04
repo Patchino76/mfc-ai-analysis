@@ -5,6 +5,7 @@ from typing import Any, List, Dict
 from pydantic import BaseModel, Field
 from datetime import datetime, timedelta
 from gen_dataframe import load_dispatchers
+from chat_agents import run_graph
 
 
 app = FastAPI()
@@ -27,7 +28,10 @@ def get_dispatchers_df():
 @app.get("/chat")
 def get_chat(query: str, response_model=Dict[str, Any]):
     print("query: ", query)
-    return {"data": query}
+    result = run_graph(query)
+    result = result.to_dict('records')
+    print("result: ", result)
+    return {"data": result}
 
 if __name__ == "__main__":
     import uvicorn
