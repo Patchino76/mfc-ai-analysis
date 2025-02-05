@@ -1,9 +1,11 @@
 import pandas as pd
+from langchain_core.tools.base import InjectedToolCallId
 from dotenv import load_dotenv
 from langgraph.prebuilt import ToolNode, ToolExecutor
 from langgraph.graph import StateGraph, MessagesState, START, END
 from langchain_core.messages import BaseMessage, SystemMessage, FunctionMessage, AIMessage, HumanMessage, ToolMessage
 from typing_extensions import TypedDict, List, Literal, Annotated, Sequence, Any, Dict, Optional
+from langgraph.types import Command
 from langchain_ollama import ChatOllama
 from langchain_groq import ChatGroq
 from langgraph.prebuilt import InjectedState
@@ -35,7 +37,7 @@ class AgentState(TypedDict):
     messages: Sequence[BaseMessage]
     query: str
     generated_code: str
-    result_df: Optional[Any] = None
+    exec_result: Optional[Any] = None
 
 
 def generate_python_function(state : AgentState):
@@ -85,15 +87,12 @@ def extract_function_code(generated_code: str) -> str:
     return function_body
 
 @tool
-def execute_code_tool(state: AgentState, generated_code: Annotated[str, InjectedState("generated_code")]) -> str:
+def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_code")], tool_call_id: Annotated[str, InjectedToolCallId]) -> Any:
     """
     Executes dynamically generated Python code on a provided dataframe.
 
-    Args:
-        state (AgentState): The state of the conversation.
-
     Returns:
-        str: The result of executing the function, which must be a string, number, or list.
+        Any: The result of executing the function, which must be a string, number, list or a pd.DataFrame.
     """
     # Deserialize the JSON string to a DataFrame
 
@@ -107,10 +106,17 @@ def execute_code_tool(state: AgentState, generated_code: Annotated[str, Injected
     function_name = re.search(r"def\s+(\w+)\(", function_body).group(1)
     result = namespace[function_name](full_df)
 
-    print("Result of code execution:", result)
-    print(type(result))
-    state["result_df"] = result
-    return result #son.dumps(result)
+    # print("Result of code execution:", result)
+    # return result #son.dumps(result)
+    command = Command(
+        update = {
+            "messages" : [
+                ToolMessage("Successfully executed the function.", tool_call_id = tool_call_id)
+            ],
+            "exec_result" : result
+        }
+    )
+    return command
 
 
 tools = [execute_code_tool]
@@ -149,13 +155,16 @@ def run_graph(query: str):
         messages=[(SystemMessage(content=""" You have been provided with Python code in the 'generated_code' part of the state.
             Your ONLY task is to use the 'execute_code_tool' to execute this provided code."""))],
         query=query,
-        generated_code=[],
+        generated_code="",
+        exec_result=None
     )
 
     result = app.invoke(initial_state)
-    result_df = result["result_df"]
-    return result_df
+    exec_result = result["exec_result"]
+    # print("exec_result: ", exec_result)
+    return exec_result
 
 
-user_query = "Справка за престоите на поток 1 и поток 2 по категории. Do not plot anything."
-result = run_graph(user_query)
+# user_query = "Справка за престоите на поток 1 и поток 2 по категории. Do not plot anything."
+# result = run_graph(user_query)
+# print("final result: ", result)

@@ -6,7 +6,8 @@ from pydantic import BaseModel, Field
 from datetime import datetime, timedelta
 from gen_dataframe import load_dispatchers
 from chat_agents import run_graph
-
+import pandas as pd
+from urllib.parse import unquote
 
 app = FastAPI()
 origins = ["http://localhost:3000", "https://localhost:3000"]
@@ -27,11 +28,18 @@ def get_dispatchers_df():
 
 @app.get("/chat")
 def get_chat(query: str, response_model=Dict[str, Any]):
-    print("query: ", query)
-    result = run_graph(query)
-    result = result.to_dict('records')
-    print("result: ", result)
-    return {"data": result}
+    # Decode URL-encoded query string
+    decoded_query = unquote(query)
+    print("Decoded query:", decoded_query)
+    
+    exec_result = run_graph(decoded_query)
+    print(exec_result)
+    
+    # Convert DataFrame to records if needed
+    if isinstance(exec_result, pd.DataFrame):
+        exec_result = exec_result.to_dict('records')
+        
+    return exec_result
 
 if __name__ == "__main__":
     import uvicorn

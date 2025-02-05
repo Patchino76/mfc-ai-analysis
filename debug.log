@@ -1,0 +1,301 @@
+2025-02-05 08:37:57,595 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:37:57,596 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:37:58,160 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:37:58,162 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:37:58,706 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:37:58,707 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:37:59,249 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:37:59,260 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:37:59,850 - DEBUG - === Starting run_graph ===
+2025-02-05 08:37:59,853 - DEBUG - Initial state: {'messages': [SystemMessage(content=" You have been provided with Python code in the 'generated_code' part of the state.\n            Your ONLY task is to use the 'execute_code_tool' to execute this provided code.", additional_kwargs={}, response_metadata={})], 'query': '\u0421\u043f\u0440\u0430\u0432\u043a\u0430 \u0437\u0430 \u043f\u0440\u0435\u0441\u0442\u043e\u0438\u0442\u0435 \u043d\u0430 \u043f\u043e\u0442\u043e\u043a 1 \u0438 \u043f\u043e\u0442\u043e\u043a 2 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438. Do not plot anything.', 'generated_code': '', 'exec_result': None}
+2025-02-05 08:37:59,871 - DEBUG - Starting new HTTPS connection (1): api.smith.langchain.com:443
+2025-02-05 08:38:00,047 - DEBUG - https://api.smith.langchain.com:443 "GET /info HTTP/1.1" 200 672
+2025-02-05 08:38:00,825 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:38:01,712 - DEBUG - Request options: {'method': 'post', 'url': '/openai/v1/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'system', 'content': " You have been provided with Python code in the 'generated_code' part of the state.\n            Your ONLY task is to use the 'execute_code_tool' to execute this provided code."}], 'model': 'llama-3.3-70b-versatile', 'n': 1, 'stop': None, 'stream': False, 'temperature': 0.7, 'tools': [{'type': 'function', 'function': {'name': 'execute_code_tool', 'description': 'Executes dynamically generated Python code on a provided dataframe.\n\nArgs:\n    state (AgentState): The state of the conversation.\n\nReturns:\n    str: The result of executing the function, which must be a string, number, or list.', 'parameters': {'properties': {'state': {'properties': {'messages': {'items': {'additionalProperties': True, 'description': 'Base abstract message class.\n\nMessages are the inputs and outputs of ChatModels.', 'properties': {'content': {'anyOf': [{'type': 'string'}, {'items': {'anyOf': [{'type': 'string'}, {'type': 'object'}]}, 'type': 'array'}]}, 'additional_kwargs': {'type': 'object'}, 'response_metadata': {'type': 'object'}, 'type': {'type': 'string'}, 'name': {'anyOf': [{'type': 'string'}, {'type': 'null'}], 'default': None}, 'id': {'anyOf': [{'type': 'string'}, {'type': 'null'}], 'default': None}}, 'required': ['content', 'type'], 'type': 'object'}, 'type': 'array'}, 'query': {'type': 'string'}, 'generated_code': {'type': 'string'}, 'exec_result': {'anyOf': [{}, {'type': 'null'}]}}, 'required': ['messages', 'query', 'generated_code', 'exec_result'], 'type': 'object'}}, 'required': ['state'], 'type': 'object'}}}]}}
+2025-02-05 08:38:01,713 - DEBUG - Sending HTTP Request: POST https://api.groq.com/openai/v1/chat/completions
+2025-02-05 08:38:01,713 - DEBUG - connect_tcp.started host='api.groq.com' port=443 local_address=None timeout=None socket_options=None
+2025-02-05 08:38:01,733 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000025640F3AA90>
+2025-02-05 08:38:01,733 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x0000025640E47530> server_hostname='api.groq.com' timeout=None
+2025-02-05 08:38:01,764 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000025640F5B690>
+2025-02-05 08:38:01,765 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-02-05 08:38:01,766 - DEBUG - send_request_headers.complete
+2025-02-05 08:38:01,767 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-02-05 08:38:01,768 - DEBUG - send_request_body.complete
+2025-02-05 08:38:01,768 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-02-05 08:38:02,222 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 05 Feb 2025 06:38:09 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'CF-Ray', b'90d0e55a7e0a71a6-BEG'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Cache-Control', b'private, max-age=0, no-store, no-cache, must-revalidate'), (b'Vary', b'Origin, Accept-Encoding'), (b'x-groq-region', b'me-central-1'), (b'x-ratelimit-limit-requests', b'1000'), (b'x-ratelimit-limit-tokens', b'6000'), (b'x-ratelimit-remaining-requests', b'999'), (b'x-ratelimit-remaining-tokens', b'5952'), (b'x-ratelimit-reset-requests', b'1m26.4s'), (b'x-ratelimit-reset-tokens', b'480ms'), (b'x-request-id', b'req_01jkad959sf7ks6kn1mrpnw8pn'), (b'Set-Cookie', b'__cf_bm=AwJ8MraLjFubPWPhraYRNyzh3_XRhpQfrETR9U6vPok-1738737489-1.0.1.1-o__CiulKN4TXohoJbVSYj5DiRMBKt3PgXZnqK5fRzyc5bOIRfm039iSTTo3eeuegMX3ADWDztEkcquxTiC6WUQ; path=/; expires=Wed, 05-Feb-25 07:08:09 GMT; domain=.groq.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'Content-Encoding', b'br'), (b'alt-svc', b'h3=":443"; ma=86400')])
+2025-02-05 08:38:02,223 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-05 08:38:02,223 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-02-05 08:38:02,224 - DEBUG - receive_response_body.complete
+2025-02-05 08:38:02,224 - DEBUG - response_closed.started
+2025-02-05 08:38:02,224 - DEBUG - response_closed.complete
+2025-02-05 08:38:02,224 - DEBUG - HTTP Response: POST https://api.groq.com/openai/v1/chat/completions "200 OK" Headers({'date': 'Wed, 05 Feb 2025 06:38:09 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'cf-ray': '90d0e55a7e0a71a6-BEG', 'cf-cache-status': 'DYNAMIC', 'cache-control': 'private, max-age=0, no-store, no-cache, must-revalidate', 'vary': 'Origin, Accept-Encoding', 'x-groq-region': 'me-central-1', 'x-ratelimit-limit-requests': '1000', 'x-ratelimit-limit-tokens': '6000', 'x-ratelimit-remaining-requests': '999', 'x-ratelimit-remaining-tokens': '5952', 'x-ratelimit-reset-requests': '1m26.4s', 'x-ratelimit-reset-tokens': '480ms', 'x-request-id': 'req_01jkad959sf7ks6kn1mrpnw8pn', 'set-cookie': '__cf_bm=AwJ8MraLjFubPWPhraYRNyzh3_XRhpQfrETR9U6vPok-1738737489-1.0.1.1-o__CiulKN4TXohoJbVSYj5DiRMBKt3PgXZnqK5fRzyc5bOIRfm039iSTTo3eeuegMX3ADWDztEkcquxTiC6WUQ; path=/; expires=Wed, 05-Feb-25 07:08:09 GMT; domain=.groq.com; HttpOnly; Secure; SameSite=None', 'server': 'cloudflare', 'content-encoding': 'br', 'alt-svc': 'h3=":443"; ma=86400'})
+2025-02-05 08:38:02,273 - DEBUG - === Inside execute_code_tool ===
+2025-02-05 08:38:02,274 - DEBUG - Input state: {'messages': [], 'query': 'provided_query', 'generated_code': 'provided_python_code', 'exec_result': None}
+2025-02-05 08:38:02,274 - DEBUG - Generated code: def analyze_stream_durations(df):
+    filtered_df = df[df['stream_name'].isin(['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2'])]
+    grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+    return grouped_df
+
+2025-02-05 08:38:02,274 - DEBUG - 3 - Executing Function Body:
+2025-02-05 08:38:02,275 - DEBUG - def analyze_stream_durations(df):
+    filtered_df = df[df['stream_name'].isin(['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2'])]
+    grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+    return grouped_df
+
+2025-02-05 08:38:02,290 - DEBUG - Result of code execution:   stream_name      category  duration_minutes
+0     \u041f\u043e\u0442\u043e\u043a 1       \u0435\u043b\u0435\u043a\u0442\u0440\u043e               383
+1     \u041f\u043e\u0442\u043e\u043a 1        \u043c\u0435\u0445\u0430\u043d\u043e               443
+2     \u041f\u043e\u0442\u043e\u043a 1           \u043f\u043f\u0440               341
+3     \u041f\u043e\u0442\u043e\u043a 1      \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u0438               530
+4     \u041f\u043e\u0442\u043e\u043a 1  \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u043d\u0438               461
+5     \u041f\u043e\u0442\u043e\u043a 2       \u0435\u043b\u0435\u043a\u0442\u0440\u043e               105
+6     \u041f\u043e\u0442\u043e\u043a 2        \u043c\u0435\u0445\u0430\u043d\u043e               366
+7     \u041f\u043e\u0442\u043e\u043a 2           \u043f\u043f\u0440               194
+8     \u041f\u043e\u0442\u043e\u043a 2      \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u0438               354
+9     \u041f\u043e\u0442\u043e\u043a 2  \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u043d\u0438               314
+2025-02-05 08:38:02,291 - DEBUG - Result type: <class 'pandas.core.frame.DataFrame'>
+2025-02-05 08:38:02,297 - DEBUG - State after setting exec_result: {'messages': [], 'query': 'provided_query', 'generated_code': 'provided_python_code', 'exec_result':   stream_name      category  duration_minutes
+0     \u041f\u043e\u0442\u043e\u043a 1       \u0435\u043b\u0435\u043a\u0442\u0440\u043e               383
+1     \u041f\u043e\u0442\u043e\u043a 1        \u043c\u0435\u0445\u0430\u043d\u043e               443
+2     \u041f\u043e\u0442\u043e\u043a 1           \u043f\u043f\u0440               341
+3     \u041f\u043e\u0442\u043e\u043a 1      \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u0438               530
+4     \u041f\u043e\u0442\u043e\u043a 1  \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u043d\u0438               461
+5     \u041f\u043e\u0442\u043e\u043a 2       \u0435\u043b\u0435\u043a\u0442\u0440\u043e               105
+6     \u041f\u043e\u0442\u043e\u043a 2        \u043c\u0435\u0445\u0430\u043d\u043e               366
+7     \u041f\u043e\u0442\u043e\u043a 2           \u043f\u043f\u0440               194
+8     \u041f\u043e\u0442\u043e\u043a 2      \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u0438               354
+9     \u041f\u043e\u0442\u043e\u043a 2  \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u043d\u0438               314}
+2025-02-05 08:38:02,297 - DEBUG - === Exiting execute_code_tool ===
+2025-02-05 08:38:02,309 - DEBUG - Result from app.invoke: {'messages': [ToolMessage(content="{'messages': [], 'query': 'provided_query', 'generated_code': 'provided_python_code', 'exec_result':   stream_name      category  duration_minutes\n0     \u041f\u043e\u0442\u043e\u043a 1       \u0435\u043b\u0435\u043a\u0442\u0440\u043e               383\n1     \u041f\u043e\u0442\u043e\u043a 1        \u043c\u0435\u0445\u0430\u043d\u043e               443\n2     \u041f\u043e\u0442\u043e\u043a 1           \u043f\u043f\u0440               341\n3     \u041f\u043e\u0442\u043e\u043a 1      \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u0438               530\n4     \u041f\u043e\u0442\u043e\u043a 1  \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u043d\u0438               461\n5     \u041f\u043e\u0442\u043e\u043a 2       \u0435\u043b\u0435\u043a\u0442\u0440\u043e               105\n6     \u041f\u043e\u0442\u043e\u043a 2        \u043c\u0435\u0445\u0430\u043d\u043e               366\n7     \u041f\u043e\u0442\u043e\u043a 2           \u043f\u043f\u0440               194\n8     \u041f\u043e\u0442\u043e\u043a 2      \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u0438               354\n9     \u041f\u043e\u0442\u043e\u043a 2  \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u043d\u0438               314}", name='execute_code_tool', tool_call_id='call_sm9h')], 'query': '\u0421\u043f\u0440\u0430\u0432\u043a\u0430 \u0437\u0430 \u043f\u0440\u0435\u0441\u0442\u043e\u0438\u0442\u0435 \u043d\u0430 \u043f\u043e\u0442\u043e\u043a 1 \u0438 \u043f\u043e\u0442\u043e\u043a 2 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438. Do not plot anything.', 'generated_code': "def analyze_stream_durations(df):\n    filtered_df = df[df['stream_name'].isin(['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2'])]\n    grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()\n    return grouped_df\n", 'exec_result': None}
+2025-02-05 08:38:02,310 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:38:02,311 - DEBUG - Result type: <class 'langgraph.pregel.io.AddableValuesDict'>
+2025-02-05 08:38:02,312 - DEBUG - Found exec_result in dict: None
+2025-02-05 08:38:02,678 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:38:02,725 - DEBUG - Closing Client.session
+2025-02-05 08:38:02,726 - DEBUG - Closing Client.session
+2025-02-05 08:39:34,868 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:39:34,869 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:39:35,423 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:39:35,425 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:39:35,986 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:39:35,987 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:39:36,536 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:39:36,537 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:39:37,131 - DEBUG - === Starting run_graph ===
+2025-02-05 08:39:37,134 - DEBUG - Initial state: {'messages': [SystemMessage(content=" You have been provided with Python code in the 'generated_code' part of the state.\n            Your ONLY task is to use the 'execute_code_tool' to execute this provided code.", additional_kwargs={}, response_metadata={})], 'query': '\u0421\u043f\u0440\u0430\u0432\u043a\u0430 \u0437\u0430 \u043f\u0440\u0435\u0441\u0442\u043e\u0438\u0442\u0435 \u043d\u0430 \u043f\u043e\u0442\u043e\u043a 1 \u0438 \u043f\u043e\u0442\u043e\u043a 2 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438. Do not plot anything.', 'generated_code': '', 'exec_result': None}
+2025-02-05 08:39:37,152 - DEBUG - Starting new HTTPS connection (1): api.smith.langchain.com:443
+2025-02-05 08:39:37,350 - DEBUG - https://api.smith.langchain.com:443 "GET /info HTTP/1.1" 200 672
+2025-02-05 08:39:37,883 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:39:39,042 - DEBUG - Request options: {'method': 'post', 'url': '/openai/v1/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'system', 'content': " You have been provided with Python code in the 'generated_code' part of the state.\n            Your ONLY task is to use the 'execute_code_tool' to execute this provided code."}], 'model': 'llama-3.3-70b-versatile', 'n': 1, 'stop': None, 'stream': False, 'temperature': 0.7, 'tools': [{'type': 'function', 'function': {'name': 'execute_code_tool', 'description': 'Executes dynamically generated Python code on a provided dataframe.\n\nArgs:\n    state (AgentState): The state of the conversation.\n\nReturns:\n    AgentState: The updated state with exec_result set', 'parameters': {'properties': {'state': {'properties': {'messages': {'items': {'additionalProperties': True, 'description': 'Base abstract message class.\n\nMessages are the inputs and outputs of ChatModels.', 'properties': {'content': {'anyOf': [{'type': 'string'}, {'items': {'anyOf': [{'type': 'string'}, {'type': 'object'}]}, 'type': 'array'}]}, 'additional_kwargs': {'type': 'object'}, 'response_metadata': {'type': 'object'}, 'type': {'type': 'string'}, 'name': {'anyOf': [{'type': 'string'}, {'type': 'null'}], 'default': None}, 'id': {'anyOf': [{'type': 'string'}, {'type': 'null'}], 'default': None}}, 'required': ['content', 'type'], 'type': 'object'}, 'type': 'array'}, 'query': {'type': 'string'}, 'generated_code': {'type': 'string'}, 'exec_result': {'anyOf': [{}, {'type': 'null'}]}}, 'required': ['messages', 'query', 'generated_code', 'exec_result'], 'type': 'object'}}, 'required': ['state'], 'type': 'object'}}}]}}
+2025-02-05 08:39:39,043 - DEBUG - Sending HTTP Request: POST https://api.groq.com/openai/v1/chat/completions
+2025-02-05 08:39:39,044 - DEBUG - connect_tcp.started host='api.groq.com' port=443 local_address=None timeout=None socket_options=None
+2025-02-05 08:39:39,102 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001D6060C4B10>
+2025-02-05 08:39:39,102 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x000001D6060F35C0> server_hostname='api.groq.com' timeout=None
+2025-02-05 08:39:39,133 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001D606228790>
+2025-02-05 08:39:39,133 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-02-05 08:39:39,134 - DEBUG - send_request_headers.complete
+2025-02-05 08:39:39,134 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-02-05 08:39:39,134 - DEBUG - send_request_body.complete
+2025-02-05 08:39:39,134 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-02-05 08:39:39,467 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:39:39,559 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 05 Feb 2025 06:39:46 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'CF-Ray', b'90d0e7bb08afb01b-BEG'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Cache-Control', b'private, max-age=0, no-store, no-cache, must-revalidate'), (b'Vary', b'Origin, Accept-Encoding'), (b'x-groq-region', b'me-central-1'), (b'x-ratelimit-limit-requests', b'1000'), (b'x-ratelimit-limit-tokens', b'6000'), (b'x-ratelimit-remaining-requests', b'999'), (b'x-ratelimit-remaining-tokens', b'5952'), (b'x-ratelimit-reset-requests', b'1m26.4s'), (b'x-ratelimit-reset-tokens', b'480ms'), (b'x-request-id', b'req_01jkadc4c6e9vr2aajq6ex0fk6'), (b'Set-Cookie', b'__cf_bm=N6_BLS2UV0JHm99Nh58XkcoIkgbO5AkJp3zJe9knmIQ-1738737586-1.0.1.1-9_UWHK1A7sW2OLxM0LWziw2qeE89.AHIBy3Y1F9UX8IgNSTeoRJyxgqDSsMysT.8uxFwtMKbPPPSvG2CncOBpw; path=/; expires=Wed, 05-Feb-25 07:09:46 GMT; domain=.groq.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'Content-Encoding', b'br'), (b'alt-svc', b'h3=":443"; ma=86400')])
+2025-02-05 08:39:39,566 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-05 08:39:39,566 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-02-05 08:39:39,568 - DEBUG - receive_response_body.complete
+2025-02-05 08:39:39,568 - DEBUG - response_closed.started
+2025-02-05 08:39:39,568 - DEBUG - response_closed.complete
+2025-02-05 08:39:39,569 - DEBUG - HTTP Response: POST https://api.groq.com/openai/v1/chat/completions "200 OK" Headers({'date': 'Wed, 05 Feb 2025 06:39:46 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'cf-ray': '90d0e7bb08afb01b-BEG', 'cf-cache-status': 'DYNAMIC', 'cache-control': 'private, max-age=0, no-store, no-cache, must-revalidate', 'vary': 'Origin, Accept-Encoding', 'x-groq-region': 'me-central-1', 'x-ratelimit-limit-requests': '1000', 'x-ratelimit-limit-tokens': '6000', 'x-ratelimit-remaining-requests': '999', 'x-ratelimit-remaining-tokens': '5952', 'x-ratelimit-reset-requests': '1m26.4s', 'x-ratelimit-reset-tokens': '480ms', 'x-request-id': 'req_01jkadc4c6e9vr2aajq6ex0fk6', 'set-cookie': '__cf_bm=N6_BLS2UV0JHm99Nh58XkcoIkgbO5AkJp3zJe9knmIQ-1738737586-1.0.1.1-9_UWHK1A7sW2OLxM0LWziw2qeE89.AHIBy3Y1F9UX8IgNSTeoRJyxgqDSsMysT.8uxFwtMKbPPPSvG2CncOBpw; path=/; expires=Wed, 05-Feb-25 07:09:46 GMT; domain=.groq.com; HttpOnly; Secure; SameSite=None', 'server': 'cloudflare', 'content-encoding': 'br', 'alt-svc': 'h3=":443"; ma=86400'})
+2025-02-05 08:39:39,625 - DEBUG - === Inside execute_code_tool ===
+2025-02-05 08:39:39,625 - DEBUG - Input state: {'messages': [], 'query': 'provided_query', 'generated_code': 'provided_python_code', 'exec_result': None}
+2025-02-05 08:39:39,626 - DEBUG - Generated code: def analyze_stream_durations(df):
+    streams_df = df[df['stream_name'].isin(['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2'])]
+    grouped_df = streams_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+    return grouped_df
+
+2025-02-05 08:39:39,626 - DEBUG - 3 - Executing Function Body:
+2025-02-05 08:39:39,626 - DEBUG - def analyze_stream_durations(df):
+    streams_df = df[df['stream_name'].isin(['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2'])]
+    grouped_df = streams_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+    return grouped_df
+
+2025-02-05 08:39:39,650 - DEBUG - Result of code execution:   stream_name      category  duration_minutes
+0     \u041f\u043e\u0442\u043e\u043a 1       \u0435\u043b\u0435\u043a\u0442\u0440\u043e               370
+1     \u041f\u043e\u0442\u043e\u043a 1        \u043c\u0435\u0445\u0430\u043d\u043e               369
+2     \u041f\u043e\u0442\u043e\u043a 1           \u043f\u043f\u0440               330
+3     \u041f\u043e\u0442\u043e\u043a 1      \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u0438               441
+4     \u041f\u043e\u0442\u043e\u043a 1  \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u043d\u0438               392
+5     \u041f\u043e\u0442\u043e\u043a 2       \u0435\u043b\u0435\u043a\u0442\u0440\u043e               399
+6     \u041f\u043e\u0442\u043e\u043a 2        \u043c\u0435\u0445\u0430\u043d\u043e               436
+7     \u041f\u043e\u0442\u043e\u043a 2           \u043f\u043f\u0440               472
+8     \u041f\u043e\u0442\u043e\u043a 2      \u0441\u0438\u0441\u0442\u0435\u043c\u043d\u0438               332
+9     \u041f\u043e\u0442\u043e\u043a 2  \u0442\u0435\u0445\u043d\u043e\u043b\u043e\u0433\u0438\u0447\u043d\u0438               329
+2025-02-05 08:39:39,651 - DEBUG - Result type: <class 'pandas.core.frame.DataFrame'>
+2025-02-05 08:39:39,661 - DEBUG - Result from app.invoke: {'messages': [ToolMessage(content='Error: AttributeError("\'dict\' object has no attribute \'messages\'")\n Please fix your mistakes.', name='execute_code_tool', tool_call_id='call_akpe', status='error')], 'query': '\u0421\u043f\u0440\u0430\u0432\u043a\u0430 \u0437\u0430 \u043f\u0440\u0435\u0441\u0442\u043e\u0438\u0442\u0435 \u043d\u0430 \u043f\u043e\u0442\u043e\u043a 1 \u0438 \u043f\u043e\u0442\u043e\u043a 2 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438. Do not plot anything.', 'generated_code': "def analyze_stream_durations(df):\n    streams_df = df[df['stream_name'].isin(['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2'])]\n    grouped_df = streams_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()\n    return grouped_df\n", 'exec_result': None}
+2025-02-05 08:39:39,661 - DEBUG - Result type: <class 'langgraph.pregel.io.AddableValuesDict'>
+2025-02-05 08:39:39,661 - DEBUG - Found exec_result in dict: None
+2025-02-05 08:39:40,112 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:39:40,113 - DEBUG - Closing Client.session
+2025-02-05 08:39:40,114 - DEBUG - Closing Client.session
+2025-02-05 08:40:48,885 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:40:48,887 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:40:49,432 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:40:49,433 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:40:49,996 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:40:49,997 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:40:50,540 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-02-05 08:40:50,542 - DEBUG - load_verify_locations cafile='C:\\venv\\crewai311\\Lib\\site-packages\\certifi\\cacert.pem'
+2025-02-05 08:40:51,141 - DEBUG - === Starting run_graph ===
+2025-02-05 08:40:51,144 - DEBUG - Initial state: {'messages': [SystemMessage(content=" You have been provided with Python code in the 'generated_code' part of the state.\n            Your ONLY task is to use the 'execute_code_tool' to execute this provided code.", additional_kwargs={}, response_metadata={})], 'query': '\u0421\u043f\u0440\u0430\u0432\u043a\u0430 \u0437\u0430 \u043f\u0440\u0435\u0441\u0442\u043e\u0438\u0442\u0435 \u043d\u0430 \u043f\u043e\u0442\u043e\u043a 1 \u0438 \u043f\u043e\u0442\u043e\u043a 2 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438. Do not plot anything.', 'generated_code': '', 'exec_result': None}
+2025-02-05 08:40:51,160 - DEBUG - Starting new HTTPS connection (1): api.smith.langchain.com:443
+2025-02-05 08:40:51,340 - DEBUG - https://api.smith.langchain.com:443 "GET /info HTTP/1.1" 200 672
+2025-02-05 08:40:52,321 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:40:55,481 - DEBUG - Request options: {'method': 'post', 'url': '/openai/v1/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'system', 'content': " You have been provided with Python code in the 'generated_code' part of the state.\n            Your ONLY task is to use the 'execute_code_tool' to execute this provided code."}], 'model': 'llama-3.3-70b-versatile', 'n': 1, 'stop': None, 'stream': False, 'temperature': 0.7, 'tools': [{'type': 'function', 'function': {'name': 'execute_code_tool', 'description': 'Executes dynamically generated Python code on a provided dataframe.\n\nArgs:\n    state (AgentState): The state of the conversation.\n\nReturns:\n    AgentState: The updated state with exec_result set', 'parameters': {'properties': {'state': {'properties': {'messages': {'items': {'additionalProperties': True, 'description': 'Base abstract message class.\n\nMessages are the inputs and outputs of ChatModels.', 'properties': {'content': {'anyOf': [{'type': 'string'}, {'items': {'anyOf': [{'type': 'string'}, {'type': 'object'}]}, 'type': 'array'}]}, 'additional_kwargs': {'type': 'object'}, 'response_metadata': {'type': 'object'}, 'type': {'type': 'string'}, 'name': {'anyOf': [{'type': 'string'}, {'type': 'null'}], 'default': None}, 'id': {'anyOf': [{'type': 'string'}, {'type': 'null'}], 'default': None}}, 'required': ['content', 'type'], 'type': 'object'}, 'type': 'array'}, 'query': {'type': 'string'}, 'generated_code': {'type': 'string'}, 'exec_result': {'anyOf': [{}, {'type': 'null'}]}}, 'required': ['messages', 'query', 'generated_code', 'exec_result'], 'type': 'object'}}, 'required': ['state'], 'type': 'object'}}}]}}
+2025-02-05 08:40:55,482 - DEBUG - Sending HTTP Request: POST https://api.groq.com/openai/v1/chat/completions
+2025-02-05 08:40:55,483 - DEBUG - connect_tcp.started host='api.groq.com' port=443 local_address=None timeout=None socket_options=None
+2025-02-05 08:40:55,485 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000002017D7C9810>
+2025-02-05 08:40:55,485 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x000002017D70B5C0> server_hostname='api.groq.com' timeout=None
+2025-02-05 08:40:55,505 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000002017D804A10>
+2025-02-05 08:40:55,506 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-02-05 08:40:55,506 - DEBUG - send_request_headers.complete
+2025-02-05 08:40:55,506 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-02-05 08:40:55,507 - DEBUG - send_request_body.complete
+2025-02-05 08:40:55,507 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-02-05 08:40:55,894 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:40:56,702 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 05 Feb 2025 06:41:03 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'CF-Ray', b'90d0e9985a033139-SOF'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Cache-Control', b'private, max-age=0, no-store, no-cache, must-revalidate'), (b'Vary', b'Origin, Accept-Encoding'), (b'Via', b'1.1 google'), (b'alt-svc', b'h3=":443"; ma=86400'), (b'x-groq-region', b'us-west-1'), (b'x-ratelimit-limit-requests', b'1000'), (b'x-ratelimit-limit-tokens', b'6000'), (b'x-ratelimit-remaining-requests', b'999'), (b'x-ratelimit-remaining-tokens', b'5952'), (b'x-ratelimit-reset-requests', b'1m26.4s'), (b'x-ratelimit-reset-tokens', b'480ms'), (b'x-request-id', b'req_01jkadeexmfz7rccz0h9xngvq8'), (b'Set-Cookie', b'__cf_bm=f0tGIQ5KHhwMue2e6Kz7_E_hy_FodeIQRJOG7tcsuu0-1738737663-1.0.1.1-9hTYT_s13phSDZ2WfmDKfCH2CGljPegEeChMUIbHaTLWXYXfqxOS_QEW8aIpSeJbpONhMJFjmnkxzF2g22Emrg; path=/; expires=Wed, 05-Feb-25 07:11:03 GMT; domain=.groq.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'Content-Encoding', b'br')])
+2025-02-05 08:40:56,704 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-05 08:40:56,705 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-02-05 08:40:56,705 - DEBUG - receive_response_body.complete
+2025-02-05 08:40:56,706 - DEBUG - response_closed.started
+2025-02-05 08:40:56,706 - DEBUG - response_closed.complete
+2025-02-05 08:40:56,706 - DEBUG - HTTP Response: POST https://api.groq.com/openai/v1/chat/completions "200 OK" Headers({'date': 'Wed, 05 Feb 2025 06:41:03 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'cf-ray': '90d0e9985a033139-SOF', 'cf-cache-status': 'DYNAMIC', 'cache-control': 'private, max-age=0, no-store, no-cache, must-revalidate', 'vary': 'Origin, Accept-Encoding', 'via': '1.1 google', 'alt-svc': 'h3=":443"; ma=86400', 'x-groq-region': 'us-west-1', 'x-ratelimit-limit-requests': '1000', 'x-ratelimit-limit-tokens': '6000', 'x-ratelimit-remaining-requests': '999', 'x-ratelimit-remaining-tokens': '5952', 'x-ratelimit-reset-requests': '1m26.4s', 'x-ratelimit-reset-tokens': '480ms', 'x-request-id': 'req_01jkadeexmfz7rccz0h9xngvq8', 'set-cookie': '__cf_bm=f0tGIQ5KHhwMue2e6Kz7_E_hy_FodeIQRJOG7tcsuu0-1738737663-1.0.1.1-9hTYT_s13phSDZ2WfmDKfCH2CGljPegEeChMUIbHaTLWXYXfqxOS_QEW8aIpSeJbpONhMJFjmnkxzF2g22Emrg; path=/; expires=Wed, 05-Feb-25 07:11:03 GMT; domain=.groq.com; HttpOnly; Secure; SameSite=None', 'server': 'cloudflare', 'content-encoding': 'br'})
+2025-02-05 08:40:56,764 - DEBUG - === Inside execute_code_tool ===
+2025-02-05 08:40:56,764 - DEBUG - Input state: {'messages': [], 'query': 'provided_query', 'generated_code': 'provided_python_code', 'exec_result': None}
+2025-02-05 08:40:56,764 - DEBUG - Generated code: def analyze_streams_by_category(df):
+    streams_of_interest = ['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2']
+    filtered_df = df[df['stream_name'].isin(streams_of_interest)]
+    if not filtered_df.empty:
+        grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+        return grouped_df
+    else:
+        return pd.DataFrame(columns=['stream_name', 'category', 'duration_minutes'])
+```
+
+Now convert this function to a string.
+
+```python
+function_string = """
+import pandas as pd
+
+def analyze_streams_by_category(df):
+    streams_of_interest = ['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2']
+    filtered_df = df[df['stream_name'].isin(streams_of_interest)]
+    if not filtered_df.empty:
+        grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+        return grouped_df
+    else:
+        return pd.DataFrame(columns=['stream_name', 'category', 'duration_minutes'])
+"""
+```
+
+Let's double check if the function is correct and addresses all the requirements.
+- Takes DataFrame as input. Yes.
+- Filters for '\u041f\u043e\u0442\u043e\u043a 1' and '\u041f\u043e\u0442\u043e\u043a 2'. Yes.
+- Groups by 'stream_name' and 'category'. Yes.
+- Sums 'duration_minutes'. Yes.
+- Returns a DataFrame. Yes.
+- No plotting. Yes.
+- Returns function as a string. Yes.
+
+The function looks good. Let's provide the string as the final answer.
+```python
+function_string = """import pandas as pd
+
+def analyze_streams_by_category(df):
+    streams_of_interest = ['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2']
+    filtered_df = df[df['stream_name'].isin(streams_of_interest)]
+    if not filtered_df.empty:
+        grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+        return grouped_df
+    else:
+        return pd.DataFrame(columns=['stream_name', 'category', 'duration_minutes'])"""
+print(function_string)
+``````python
+import pandas as pd
+
+def analyze_streams_by_category(df):
+    streams_of_interest = ['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2']
+    filtered_df = df[df['stream_name'].isin(streams_of_interest)]
+    if not filtered_df.empty:
+        grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+        return grouped_df
+    else:
+        return pd.DataFrame(columns=['stream_name', 'category', 'duration_minutes'])
+
+2025-02-05 08:40:56,764 - DEBUG - 3 - Executing Function Body:
+2025-02-05 08:40:56,765 - DEBUG - def analyze_streams_by_category(df):
+    streams_of_interest = ['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2']
+    filtered_df = df[df['stream_name'].isin(streams_of_interest)]
+    if not filtered_df.empty:
+        grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+        return grouped_df
+    else:
+        return pd.DataFrame(columns=['stream_name', 'category', 'duration_minutes'])
+```
+
+Now convert this function to a string.
+
+```python
+function_string = """
+import pandas as pd
+
+def analyze_streams_by_category(df):
+    streams_of_interest = ['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2']
+    filtered_df = df[df['stream_name'].isin(streams_of_interest)]
+    if not filtered_df.empty:
+        grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+        return grouped_df
+    else:
+        return pd.DataFrame(columns=['stream_name', 'category', 'duration_minutes'])
+"""
+```
+
+Let's double check if the function is correct and addresses all the requirements.
+- Takes DataFrame as input. Yes.
+- Filters for '\u041f\u043e\u0442\u043e\u043a 1' and '\u041f\u043e\u0442\u043e\u043a 2'. Yes.
+- Groups by 'stream_name' and 'category'. Yes.
+- Sums 'duration_minutes'. Yes.
+- Returns a DataFrame. Yes.
+- No plotting. Yes.
+- Returns function as a string. Yes.
+
+The function looks good. Let's provide the string as the final answer.
+```python
+function_string = """import pandas as pd
+
+def analyze_streams_by_category(df):
+    streams_of_interest = ['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2']
+    filtered_df = df[df['stream_name'].isin(streams_of_interest)]
+    if not filtered_df.empty:
+        grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+        return grouped_df
+    else:
+        return pd.DataFrame(columns=['stream_name', 'category', 'duration_minutes'])"""
+print(function_string)
+``````python
+import pandas as pd
+
+def analyze_streams_by_category(df):
+    streams_of_interest = ['\u041f\u043e\u0442\u043e\u043a 1', '\u041f\u043e\u0442\u043e\u043a 2']
+    filtered_df = df[df['stream_name'].isin(streams_of_interest)]
+    if not filtered_df.empty:
+        grouped_df = filtered_df.groupby(['stream_name', 'category'])['duration_minutes'].sum().reset_index()
+        return grouped_df
+    else:
+        return pd.DataFrame(columns=['stream_name', 'category', 'duration_minutes'])
+
+2025-02-05 08:40:56,771 - DEBUG - Result from app.invoke: {'messages': [ToolMessage(content='Error: SyntaxError(\'unterminated string literal (detected at line 28)\', (\'<string>\', 28, 4, "Let\'s double check if the function is correct and addresses all the requirements.", 28, 4))\n Please fix your mistakes.', name='execute_code_tool', tool_call_id='call_tnkz', status='error')], 'query': '\u0421\u043f\u0440\u0430\u0432\u043a\u0430 \u0437\u0430 \u043f\u0440\u0435\u0441\u0442\u043e\u0438\u0442\u0435 \u043d\u0430 \u043f\u043e\u0442\u043e\u043a 1 \u0438 \u043f\u043e\u0442\u043e\u043a 2 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438. Do not plot anything.', 'generated_code': 'def analyze_streams_by_category(df):\n    streams_of_interest = [\'\u041f\u043e\u0442\u043e\u043a 1\', \'\u041f\u043e\u0442\u043e\u043a 2\']\n    filtered_df = df[df[\'stream_name\'].isin(streams_of_interest)]\n    if not filtered_df.empty:\n        grouped_df = filtered_df.groupby([\'stream_name\', \'category\'])[\'duration_minutes\'].sum().reset_index()\n        return grouped_df\n    else:\n        return pd.DataFrame(columns=[\'stream_name\', \'category\', \'duration_minutes\'])\n```\n\nNow convert this function to a string.\n\n```python\nfunction_string = """\nimport pandas as pd\n\ndef analyze_streams_by_category(df):\n    streams_of_interest = [\'\u041f\u043e\u0442\u043e\u043a 1\', \'\u041f\u043e\u0442\u043e\u043a 2\']\n    filtered_df = df[df[\'stream_name\'].isin(streams_of_interest)]\n    if not filtered_df.empty:\n        grouped_df = filtered_df.groupby([\'stream_name\', \'category\'])[\'duration_minutes\'].sum().reset_index()\n        return grouped_df\n    else:\n        return pd.DataFrame(columns=[\'stream_name\', \'category\', \'duration_minutes\'])\n"""\n```\n\nLet\'s double check if the function is correct and addresses all the requirements.\n- Takes DataFrame as input. Yes.\n- Filters for \'\u041f\u043e\u0442\u043e\u043a 1\' and \'\u041f\u043e\u0442\u043e\u043a 2\'. Yes.\n- Groups by \'stream_name\' and \'category\'. Yes.\n- Sums \'duration_minutes\'. Yes.\n- Returns a DataFrame. Yes.\n- No plotting. Yes.\n- Returns function as a string. Yes.\n\nThe function looks good. Let\'s provide the string as the final answer.\n```python\nfunction_string = """import pandas as pd\n\ndef analyze_streams_by_category(df):\n    streams_of_interest = [\'\u041f\u043e\u0442\u043e\u043a 1\', \'\u041f\u043e\u0442\u043e\u043a 2\']\n    filtered_df = df[df[\'stream_name\'].isin(streams_of_interest)]\n    if not filtered_df.empty:\n        grouped_df = filtered_df.groupby([\'stream_name\', \'category\'])[\'duration_minutes\'].sum().reset_index()\n        return grouped_df\n    else:\n        return pd.DataFrame(columns=[\'stream_name\', \'category\', \'duration_minutes\'])"""\nprint(function_string)\n``````python\nimport pandas as pd\n\ndef analyze_streams_by_category(df):\n    streams_of_interest = [\'\u041f\u043e\u0442\u043e\u043a 1\', \'\u041f\u043e\u0442\u043e\u043a 2\']\n    filtered_df = df[df[\'stream_name\'].isin(streams_of_interest)]\n    if not filtered_df.empty:\n        grouped_df = filtered_df.groupby([\'stream_name\', \'category\'])[\'duration_minutes\'].sum().reset_index()\n        return grouped_df\n    else:\n        return pd.DataFrame(columns=[\'stream_name\', \'category\', \'duration_minutes\'])\n', 'exec_result': None}
+2025-02-05 08:40:56,771 - DEBUG - Result type: <class 'langgraph.pregel.io.AddableValuesDict'>
+2025-02-05 08:40:56,771 - DEBUG - Found exec_result in dict: None
+2025-02-05 08:40:57,198 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/1.1" 202 33
+2025-02-05 08:40:57,200 - DEBUG - Closing Client.session
+2025-02-05 08:40:57,200 - DEBUG - Closing Client.session
