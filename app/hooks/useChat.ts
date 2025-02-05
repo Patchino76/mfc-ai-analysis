@@ -4,6 +4,7 @@ import axios from "axios";
 export interface ChatResponse {
     dataframe?: Record<string, any>[];
     text?: string;
+    image?: string;
 }
 
 export function useChat() {

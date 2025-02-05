@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('Agg')  # Set the backend before importing pyplot
+import seaborn as sns
 import pandas as pd
 from langchain_core.tools.base import InjectedToolCallId
 from dotenv import load_dotenv
@@ -67,6 +70,7 @@ def generate_python_function(state : AgentState):
     Place the index in the first column and the other in the second one before returning it.
     Try to convert the column names of the dataframe into bulgarian language.
 
+    Do not prefer seaborn than matplotlib for better and more complicated plots.
     If you create a plot function, do not use plt.show(), instead return the image in base64 format using the base64 and BytesIO libraries.
     If returning a base64 string do not add 'data:image/png;base64' to it."""
 
@@ -102,26 +106,12 @@ def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_co
     print("3 - Executing Function Body:")
     print(function_body)
     namespace = {}
-    exec("import pandas as pd\nimport matplotlib.pyplot as plt\nfrom io import BytesIO\nimport base64\nimport numpy as np\n", namespace)  # Import necessary modules
+    exec("import pandas as pd\nimport matplotlib.pyplot as plt\nfrom io import BytesIO\nimport base64\nimport numpy as np\nimport seaborn as sns\nimport io\n", namespace)  # Import necessary modules
     exec(function_body, namespace)
 
     function_name = re.search(r"def\s+(\w+)\(", function_body).group(1)
     result = namespace[function_name](full_df)
     
-    # Ensure DataFrame has consistent structure
-    # if isinstance(result, pd.DataFrame):
-    #     # Ensure column names match our schema
-    #     if 'duration_minutes' in result.columns:
-    #         result = result.rename(columns={'duration_minutes': 'total_duration_minutes'})
-            
-    #     # Convert types for consistent serialization
-    #     if 'total_duration_minutes' in result.columns:
-    #         result['total_duration_minutes'] = result['total_duration_minutes'].astype(float)
-    #     if 'stream_name' in result.columns:
-    #         result['stream_name'] = result['stream_name'].astype(str)
-    #     if 'category' in result.columns:
-    #         result['category'] = result['category'].astype(str)
-
     command = Command(
         update = {
             "messages" : [
@@ -182,5 +172,6 @@ def run_graph(query: str):
 
 # user_query = "Справка за престоите на поток 1 и поток 2 по категории. Do not plot anything."
 # Кои са причините за най-дълг престой на поток 1 и поток 2? Колко са те?
+# Начертай диаграма на разсейване с регресионна права на престоите по категории на поток 5 и 7.
 # result = run_graph(user_query)
 # print("final result: ", result)

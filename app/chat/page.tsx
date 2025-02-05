@@ -13,7 +13,7 @@ type MessageSender = "user" | "system";
 
 interface BaseMessage {
     sender: MessageSender;
-    type: "text" | "table";
+    type: "text" | "table" | "image";
 }
 
 interface TextMessage extends BaseMessage {
@@ -26,7 +26,12 @@ interface TableMessage extends BaseMessage {
     data: Record<string, any>[];
 }
 
-type ChatMessage = TextMessage | TableMessage;
+interface ImageMessage extends BaseMessage {
+    type: "image";
+    base64Data: string;
+}
+
+type ChatMessage = TextMessage | TableMessage | ImageMessage;
 
 const ChatPage = () => {
   const [message, setMessage] = useState("");
@@ -64,6 +69,13 @@ const ChatPage = () => {
                       sender: "system"
                   };
                   setChatHistory(prev => [...prev, tableMessage, statusMessage]);
+              } else if (data?.image) {
+                  const imageMessage: ImageMessage = {
+                      type: "image",
+                      base64Data: data.image,
+                      sender: "system"
+                  };
+                  setChatHistory(prev => [...prev, imageMessage]);
               } else if (data?.text) {
                   const textMessage: TextMessage = {
                       type: "text",
@@ -99,9 +111,17 @@ const ChatPage = () => {
                   }`}>
                     {msg.text}
                   </div>
-                ) : (
+                ) : msg.type === "table" ? (
                   <div className="w-full p-4 bg-muted rounded-lg">
                     <DataTable tableData={msg.data} />
+                  </div>
+                ) : (
+                  <div className="w-full p-4 bg-muted rounded-lg">
+                    <img 
+                      src={`data:image/png;base64,${msg.base64Data}`}
+                      alt="Generated visualization"
+                      className="max-w-full h-auto"
+                    />
                   </div>
                 )}
               </div>

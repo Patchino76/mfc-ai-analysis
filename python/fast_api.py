@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('Agg')  # Set the backend before importing pyplot
+
 from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Any, List, Dict
@@ -8,6 +11,7 @@ from gen_dataframe import load_dispatchers
 from chat_agents import run_graph
 import pandas as pd
 from urllib.parse import unquote
+import base64
 
 app = FastAPI()
 origins = ["http://localhost:3000", "https://localhost:3000"]
@@ -26,22 +30,37 @@ def get_dispatchers_df():
     return df.to_dict('records')
 
 
+def is_base64_image(s: str) -> bool:
+    try:
+        # Try to decode the string
+        decoded = base64.b64decode(s)
+        # Check if it starts with common image headers
+        return decoded.startswith((
+            b'\x89PNG\r\n\x1a\n',  # PNG
+            b'\xff\xd8\xff',       # JPEG
+            b'GIF87a',             # GIF
+            b'GIF89a'              # GIF
+        ))
+    except:
+        return False
+
 @app.get("/chat")
-def get_chat(query: str, response_model=Dict[str, Any]):
+async def get_chat(query: str):
     # Decode URL-encoded query string
     decoded_query = unquote(query)
     print("Decoded query:", decoded_query)
     
     exec_result = run_graph(decoded_query)
+    print("Type of exec_result:", type(exec_result))
     
-    
-    # Convert DataFrame to records if needed
     if isinstance(exec_result, pd.DataFrame):
         print(exec_result.info())
         exec_result = exec_result.to_dict('records')
         return {"dataframe": exec_result}
 
     if isinstance(exec_result, str):
+        if is_base64_image(exec_result):
+            return {"image": exec_result}
         return {"text": exec_result}
 
 if __name__ == "__main__":
