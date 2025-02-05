@@ -102,7 +102,7 @@ const ChatPage = () => {
   return (
       <div className="min-h-screen p-4 bg-background">
         <div className="max-w-7xl mx-auto space-y-4">
-          <ScrollArea className="h-[600px] w-full rounded-md border p-4">
+          <ScrollArea className="h-[800px] w-full rounded-md border p-4">
             {chatHistory.map((msg, index) => (
               <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
                 {msg.type === "text" ? (
