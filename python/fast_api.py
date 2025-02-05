@@ -33,10 +33,11 @@ def get_chat(query: str, response_model=Dict[str, Any]):
     print("Decoded query:", decoded_query)
     
     exec_result = run_graph(decoded_query)
-    print(exec_result)
+    
     
     # Convert DataFrame to records if needed
     if isinstance(exec_result, pd.DataFrame):
+        print(exec_result.info())
         exec_result = exec_result.to_dict('records')
         
     return exec_result

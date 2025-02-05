@@ -12,7 +12,7 @@ import { useState } from "react";
 const ChatPage = () => {
     const [message, setMessage] = useState("");
     const [chatHistory, setChatHistory] = useState<{ text: string; sender: "user" | "system" }[]>([
-      { text: "Hello! How can I help you today?", sender: "system" },
+      { text: "Справка за престоите на поток 1 и поток 2 по категории.", sender: "system" },
     ]);
     const chatMutation = useChat();
 
@@ -20,7 +20,8 @@ const ChatPage = () => {
         console.log("Submitted message:", message);
         chatMutation.mutate(message, {
             onSuccess: (data) => {
-                console.log("Response:", data);
+                console.log(data);
+                console.log("headers", Object.keys(data[0]))
                 setMessage("");
             }
         });

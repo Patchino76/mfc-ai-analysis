@@ -94,8 +94,6 @@ def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_co
     Returns:
         Any: The result of executing the function, which must be a string, number, list or a pd.DataFrame.
     """
-    # Deserialize the JSON string to a DataFrame
-
     function_body = generated_code
     print("3 - Executing Function Body:")
     print(function_body)
@@ -105,9 +103,21 @@ def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_co
 
     function_name = re.search(r"def\s+(\w+)\(", function_body).group(1)
     result = namespace[function_name](full_df)
+    
+    # Ensure DataFrame has consistent structure
+    if isinstance(result, pd.DataFrame):
+        # Ensure column names match our schema
+        if 'duration_minutes' in result.columns:
+            result = result.rename(columns={'duration_minutes': 'total_duration_minutes'})
+            
+        # Convert types for consistent serialization
+        if 'total_duration_minutes' in result.columns:
+            result['total_duration_minutes'] = result['total_duration_minutes'].astype(float)
+        if 'stream_name' in result.columns:
+            result['stream_name'] = result['stream_name'].astype(str)
+        if 'category' in result.columns:
+            result['category'] = result['category'].astype(str)
 
-    # print("Result of code execution:", result)
-    # return result #son.dumps(result)
     command = Command(
         update = {
             "messages" : [
