@@ -11,18 +11,29 @@ import { useState } from "react";
 
 type MessageSender = "user" | "system";
 
-interface ChatMessage {
-    text: string;
+interface BaseMessage {
     sender: MessageSender;
+    type: "text" | "table";
 }
+
+interface TextMessage extends BaseMessage {
+    type: "text";
+    text: string;
+}
+
+interface TableMessage extends BaseMessage {
+    type: "table";
+    data: Record<string, any>[];
+}
+
+type ChatMessage = TextMessage | TableMessage;
 
 const ChatPage = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
-      { text: "Справка за престоите на поток 1 и поток 2 по категории.", sender: "system" },
+      { type: "text", text: "Справка за престоите на поток 1 и поток 2 по категории.", sender: "system" },
   ]);
   const chatMutation = useChat();
-  const [tableData, setTableData] = useState<any[]>([]);
   
   const handleSubmit = (e?: React.FormEvent) => {
       e?.preventDefault();
@@ -30,105 +41,87 @@ const ChatPage = () => {
       if (!message.trim()) return;
       
       // Add user message to chat history
-      const newMessage: ChatMessage = {
+      const userMessage: TextMessage = {
+          type: "text",
           text: message,
           sender: "user"
       };
-      setChatHistory(prev => [...prev, newMessage]);
+      setChatHistory(prev => [...prev, userMessage]);
       
       chatMutation.mutate(message, {
           onSuccess: (data: ChatResponse) => {
               console.log("Response data:", data);
               
               if (data?.dataframe) {
-                  setTableData(data.dataframe);
-                  const newMessage: ChatMessage = {
+                  const tableMessage: TableMessage = {
+                      type: "table",
+                      data: data.dataframe,
+                      sender: "system"
+                  };
+                  const statusMessage: TextMessage = {
+                      type: "text",
                       text: "Data table has been updated",
                       sender: "system"
                   };
-                  setChatHistory(prev => [...prev, newMessage]);
+                  setChatHistory(prev => [...prev, tableMessage, statusMessage]);
               } else if (data?.text) {
-                  const newMessage: ChatMessage = {
+                  const textMessage: TextMessage = {
+                      type: "text",
                       text: data.text,
                       sender: "system"
                   };
-                  setChatHistory(prev => [...prev, newMessage]);
-                  setTableData([]); // Clear the table when we receive text
+                  setChatHistory(prev => [...prev, textMessage]);
               }
               
               setMessage("");
           },
           onError: (error) => {
               console.error("Chat error:", error);
-              const newMessage: ChatMessage = {
+              const errorMessage: TextMessage = {
+                  type: "text",
                   text: "Error processing your request",
                   sender: "system"
               };
-              setChatHistory(prev => [...prev, newMessage]);
+              setChatHistory(prev => [...prev, errorMessage]);
           }
       });
   };
 
-  
-    return (
+  return (
       <div className="min-h-screen p-4 bg-background">
         <div className="max-w-7xl mx-auto space-y-4">
-          Top section with table and image
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            { tableData.length > 0 && <DataTable tableData = {tableData}/> }
-            <ImageDisplay 
-              title="Preview"
-              imageUrl="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba"
-            />
-          </div>
-  
-          Chat history
-          <Card>
-            <CardHeader>
-              <CardTitle>Chat History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[300px] w-full pr-4">
-                {chatHistory.map((msg, i) => (
-                  <div
-                    key={i}
-                    className={`mb-4 ${
-                      msg.sender === "user" ? "text-right" : "text-left"
-                    }`}
-                  >
-                    <div
-                      className={`inline-block px-4 py-2 rounded-lg ${
-                        msg.sender === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted"
-                      }`}
-                    >
-                      {msg.text}
-                    </div>
+          <ScrollArea className="h-[600px] w-full rounded-md border p-4">
+            {chatHistory.map((msg, index) => (
+              <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
+                {msg.type === "text" ? (
+                  <div className={`inline-block p-2 rounded-lg ${
+                    msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                  }`}>
+                    {msg.text}
                   </div>
-                ))}
-              </ScrollArea>
-            </CardContent>
-          </Card>
-  
-          Chat input
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex gap-2">
-                <Input 
-                  placeholder="Type your message..." 
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                />
-                <Button onClick={handleSubmit}>
-                  <Send className="h-4 w-4" />
-                </Button>
+                ) : (
+                  <div className="w-full p-4 bg-muted rounded-lg">
+                    <DataTable tableData={msg.data} />
+                  </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </ScrollArea>
+
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <Input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-1"
+            />
+            <Button type="submit">
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
         </div>
       </div>
-    );
-}
+  );
+};
 
 export default ChatPage

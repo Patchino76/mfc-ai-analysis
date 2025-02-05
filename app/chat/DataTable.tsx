@@ -15,7 +15,7 @@ export function DataTable({ tableData }: DataTableProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [dateString, setDateString] = useState('');
   const headers = Object.keys(tableData[0]);
-  console.log("Headers!!!:", headers);
+  // console.log("Headers!!!:", headers);
 
   useEffect(() => {
     setDateString(new Date().toLocaleDateString());
