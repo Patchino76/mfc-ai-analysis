@@ -39,8 +39,10 @@ def get_chat(query: str, response_model=Dict[str, Any]):
     if isinstance(exec_result, pd.DataFrame):
         print(exec_result.info())
         exec_result = exec_result.to_dict('records')
-        
-    return exec_result
+        return {"dataframe": exec_result}
+
+    if isinstance(exec_result, str):
+        return {"text": exec_result}
 
 if __name__ == "__main__":
     import uvicorn

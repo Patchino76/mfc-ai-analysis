@@ -7,9 +7,15 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export function DataTable() {
+interface DataTableProps {
+  tableData: any[];
+}
+
+export function DataTable({ tableData }: DataTableProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [dateString, setDateString] = useState('');
+  const headers = Object.keys(tableData[0]);
+  console.log("Headers!!!:", headers);
 
   useEffect(() => {
     setDateString(new Date().toLocaleDateString());
@@ -35,17 +41,19 @@ export function DataTable() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
+                  {headers.map((header) => (
+                    <TableHead key={header}>{header}</TableHead>
+                  ))}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Array.from({length: 5}).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell>Item {i + 1}</TableCell>
-                    <TableCell>Active</TableCell>
-                    <TableCell>{dateString || '-'}</TableCell>
+                {tableData.map((row, rowIndex) => (
+                  <TableRow key={rowIndex}>
+                    {headers.map((header) => (
+                      <TableCell key={`${rowIndex}-${header}`}>
+                        {row[header]?.toString() || '-'}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 ))}
               </TableBody>

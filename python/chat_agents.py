@@ -68,7 +68,7 @@ def generate_python_function(state : AgentState):
 
     response = llm_gemini.generate_content(func_prompt)
     print("1 - Generated Python Function Response:")
-    print(response.text)
+    # print(response.text)
     extracted_function = extract_function_code(response.text)
     state["generated_code"] = extracted_function
     return state # Return the updated state
@@ -83,7 +83,7 @@ def extract_function_code(generated_code: str) -> str:
 
     function_body = function_match.group(1)
     print("2 - Extracted Function Body:")
-    print(function_body)
+    # print(function_body)
     return function_body
 
 @tool
@@ -105,18 +105,18 @@ def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_co
     result = namespace[function_name](full_df)
     
     # Ensure DataFrame has consistent structure
-    if isinstance(result, pd.DataFrame):
-        # Ensure column names match our schema
-        if 'duration_minutes' in result.columns:
-            result = result.rename(columns={'duration_minutes': 'total_duration_minutes'})
+    # if isinstance(result, pd.DataFrame):
+    #     # Ensure column names match our schema
+    #     if 'duration_minutes' in result.columns:
+    #         result = result.rename(columns={'duration_minutes': 'total_duration_minutes'})
             
-        # Convert types for consistent serialization
-        if 'total_duration_minutes' in result.columns:
-            result['total_duration_minutes'] = result['total_duration_minutes'].astype(float)
-        if 'stream_name' in result.columns:
-            result['stream_name'] = result['stream_name'].astype(str)
-        if 'category' in result.columns:
-            result['category'] = result['category'].astype(str)
+    #     # Convert types for consistent serialization
+    #     if 'total_duration_minutes' in result.columns:
+    #         result['total_duration_minutes'] = result['total_duration_minutes'].astype(float)
+    #     if 'stream_name' in result.columns:
+    #         result['stream_name'] = result['stream_name'].astype(str)
+    #     if 'category' in result.columns:
+    #         result['category'] = result['category'].astype(str)
 
     command = Command(
         update = {
@@ -171,10 +171,12 @@ def run_graph(query: str):
 
     result = app.invoke(initial_state)
     exec_result = result["exec_result"]
-    # print("exec_result: ", exec_result)
+    print("exec_result: ", exec_result)
+    print("Type of exec_result: ", type(exec_result))
     return exec_result
 
 
 # user_query = "Справка за престоите на поток 1 и поток 2 по категории. Do not plot anything."
+# Кои са причините за най-дълг престой на поток 1 и поток 2? Колко са те?
 # result = run_graph(user_query)
 # print("final result: ", result)

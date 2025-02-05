@@ -6,26 +6,68 @@ import { Send } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "./DataTable";
 import { ImageDisplay } from "./ImageDisplay";
-import { useChat } from "../hooks/useChat";
+import { useChat, ChatResponse } from "../hooks/useChat";
 import { useState } from "react";
 
-const ChatPage = () => {
-    const [message, setMessage] = useState("");
-    const [chatHistory, setChatHistory] = useState<{ text: string; sender: "user" | "system" }[]>([
-      { text: "Справка за престоите на поток 1 и поток 2 по категории.", sender: "system" },
-    ]);
-    const chatMutation = useChat();
+type MessageSender = "user" | "system";
 
-    const handleSubmit = () => {
-        console.log("Submitted message:", message);
-        chatMutation.mutate(message, {
-            onSuccess: (data) => {
-                console.log(data);
-                console.log("headers", Object.keys(data[0]))
-                setMessage("");
-            }
-        });
-    };
+interface ChatMessage {
+    text: string;
+    sender: MessageSender;
+}
+
+const ChatPage = () => {
+  const [message, setMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
+      { text: "Справка за престоите на поток 1 и поток 2 по категории.", sender: "system" },
+  ]);
+  const chatMutation = useChat();
+  const [tableData, setTableData] = useState<any[]>([]);
+  
+  const handleSubmit = (e?: React.FormEvent) => {
+      e?.preventDefault();
+      
+      if (!message.trim()) return;
+      
+      // Add user message to chat history
+      const newMessage: ChatMessage = {
+          text: message,
+          sender: "user"
+      };
+      setChatHistory(prev => [...prev, newMessage]);
+      
+      chatMutation.mutate(message, {
+          onSuccess: (data: ChatResponse) => {
+              console.log("Response data:", data);
+              
+              if (data?.dataframe) {
+                  setTableData(data.dataframe);
+                  const newMessage: ChatMessage = {
+                      text: "Data table has been updated",
+                      sender: "system"
+                  };
+                  setChatHistory(prev => [...prev, newMessage]);
+              } else if (data?.text) {
+                  const newMessage: ChatMessage = {
+                      text: data.text,
+                      sender: "system"
+                  };
+                  setChatHistory(prev => [...prev, newMessage]);
+                  setTableData([]); // Clear the table when we receive text
+              }
+              
+              setMessage("");
+          },
+          onError: (error) => {
+              console.error("Chat error:", error);
+              const newMessage: ChatMessage = {
+                  text: "Error processing your request",
+                  sender: "system"
+              };
+              setChatHistory(prev => [...prev, newMessage]);
+          }
+      });
+  };
 
   
     return (
@@ -33,7 +75,7 @@ const ChatPage = () => {
         <div className="max-w-7xl mx-auto space-y-4">
           Top section with table and image
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <DataTable /> 
+            { tableData.length > 0 && <DataTable tableData = {tableData}/> }
             <ImageDisplay 
               title="Preview"
               imageUrl="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba"
