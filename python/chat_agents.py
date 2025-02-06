@@ -26,6 +26,7 @@ import json
 import os
 import google.generativeai as genai
 from data.synthetic_df import gen_synthetic_df
+from data.dispatchers_data import create_data_prompt, load_dispatchers_data
 
 load_dotenv(override=True)
 
@@ -34,7 +35,8 @@ genai.configure(api_key="AIzaSyD-S0ajn_qCyVolBLg0mQ83j0ENoqznMX0")
 llm_gemini = genai.GenerativeModel(model_name="gemini-2.0-flash-thinking-exp-01-21")
 llm_groq = ChatGroq(model="llama-3.3-70b-versatile", api_key = "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")
 llm_ollama = ChatOllama(model="granite3.1-dense:8b", temperature=0) #llama3.1:latest granite3.1-dense:8b qwen2.5-coder:14b  jacob-ebey/phi4-tools deepseek-r1:14b
-full_df = gen_synthetic_df()
+# full_df = gen_synthetic_df()
+full_df = load_dispatchers_data()
 
 class AgentState(TypedDict):
     messages: Sequence[BaseMessage]
@@ -47,15 +49,11 @@ def generate_python_function(state : AgentState):
     """
     Generate Python function code based on a natural language query about a DataFrame.
     """
-    sample_df = full_df.head().to_string()
+    # sample_df = full_df.head().to_string()
+    sample_df = create_data_prompt()
     query = state["query"]
-    # messages = state["messages"]
-    # last_message = messages[-1]
-    # query = last_message.content
-
-    # Prepare the prompt for Gemini
     func_prompt = f"""You are an expert Python developer and data analyst. Based on the user's query and the provided DataFrame sample,
-    generate Python function code to perform the requested analysis.
+    generate Python function code to perform the requested analysis. Do not write doc strings of the function. Do not add any imports.
 
     User Query: {query}
     Sample DataFrame used only to infer the structure of the DataFrame:
@@ -65,6 +63,8 @@ def generate_python_function(state : AgentState):
     The function should accept a pd.DataFrame object with the same structure as the sample DataFrame as a parameter.
     Return only the Python function as a string and do not try to execute the code.
     Do not add sample dataframes, function descriptions and do not add calls to the function.
+    When making calculations with floating points always make the results with max 2 decimal places.
+    If possible provide your answers with the bulgarian names (cyrilic descriptions) in the dataframe attributes.
 
     If you need to return a pd.Series, please convert it to a pd.DataFrame. 
     Place the index in the first column and the other in the second one before returning it.

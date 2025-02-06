@@ -102,30 +102,32 @@ const ChatPage = () => {
   return (
       <div className="min-h-screen p-4 bg-background">
         <div className="max-w-7xl mx-auto space-y-4">
-          <ScrollArea className="h-[800px] w-full rounded-md border p-4">
-            {chatHistory.map((msg, index) => (
-              <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-                {msg.type === "text" ? (
-                  <div className={`inline-block p-2 rounded-lg ${
-                    msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                  }`}>
-                    {msg.text}
-                  </div>
-                ) : msg.type === "table" ? (
-                  <div className="w-full p-4 bg-muted rounded-lg">
-                    <DataTable tableData={msg.data} />
-                  </div>
-                ) : (
-                  <div className="w-full p-4 bg-muted rounded-lg">
-                    <img 
-                      src={`data:image/png;base64,${msg.base64Data}`}
-                      alt="Generated visualization"
-                      className="max-w-full h-auto"
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
+          <ScrollArea className="h-[800px] w-full overflow-x-auto rounded-md border p-4">
+            <div className="min-w-full">
+              {chatHistory.map((msg, index) => (
+                <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
+                  {msg.type === "text" ? (
+                    <div className={`inline-block p-2 rounded-lg ${
+                      msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                    }`}>
+                      {msg.text}
+                    </div>
+                  ) : msg.type === "table" ? (
+                    <div className="w-full p-4 bg-muted rounded-lg">
+                      <DataTable tableData={msg.data} />
+                    </div>
+                  ) : (
+                    <div className="w-full p-4 bg-muted rounded-lg">
+                      <img 
+                        src={`data:image/png;base64,${msg.base64Data}`}
+                        alt="Generated visualization"
+                        className="max-w-full h-auto"
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </ScrollArea>
 
           <form onSubmit={handleSubmit} className="flex gap-2">

@@ -26,7 +26,7 @@ app.add_middleware(
 
 @app.get("/dispatchers", response_model=List[Dict[str, Any]])
 def get_dispatchers_df():
-    df = load_dispatchers('python/data/dispatchers_en_22.csv')
+    df = load_dispatchers()
     return df.to_dict('records')
 
 
