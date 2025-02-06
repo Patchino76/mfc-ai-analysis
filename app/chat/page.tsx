@@ -2,7 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send } from "lucide-react";
+import { Send, Copy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "./DataTable";
 import { ImageDisplay } from "./ImageDisplay";
@@ -36,7 +36,7 @@ type ChatMessage = TextMessage | TableMessage | ImageMessage;
 const ChatPage = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
-      { type: "text", text: "Справка за престоите на поток 1 и поток 2 по категории.", sender: "system" },
+      { type: "text", text: "Историята на чата...", sender: "system" },
   ]);
   const chatMutation = useChat();
   
@@ -107,10 +107,20 @@ const ChatPage = () => {
               {chatHistory.map((msg, index) => (
                 <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
                   {msg.type === "text" ? (
-                    <div className={`inline-block p-2 rounded-lg ${
-                      msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                    }`}>
-                      {msg.text}
+                    <div className="inline-flex items-center gap-2">
+                      <div className={`inline-block p-2 rounded-lg ${
+                        msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                      }`}>
+                        {msg.text}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => navigator.clipboard.writeText(msg.text)}
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
                     </div>
                   ) : msg.type === "table" ? (
                     <div className="w-full p-4 bg-muted rounded-lg">

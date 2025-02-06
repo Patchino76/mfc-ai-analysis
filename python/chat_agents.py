@@ -59,8 +59,7 @@ def generate_python_function(state : AgentState):
     Sample DataFrame used only to infer the structure of the DataFrame:
     {sample_df}
 
-    Provide the Python function as a single string that can be executed using the exec function.
-    The function should accept a pd.DataFrame object with the same structure as the sample DataFrame as a parameter.
+    Please provide a Python function that takes a DataFrame as input and returns the result.
     Return only the Python function as a string and do not try to execute the code.
     Do not add sample dataframes, function descriptions and do not add calls to the function.
     When making calculations with floating points always make the results with max 2 decimal places.
@@ -68,12 +67,24 @@ def generate_python_function(state : AgentState):
 
     If you need to return a pd.Series, please convert it to a pd.DataFrame. 
     Place the index in the first column and the other in the second one before returning it.
-    Try to convert the column names of the dataframe into bulgarian language.
 
-    Do not prefer seaborn than matplotlib for better and more complicated plots.
-    If you create a plot function, do not use plt.show(), instead return the image in base64 format using the base64 and BytesIO libraries.
-    If returning a base64 string do not add 'data:image/png;base64' to it."""
+    IMPORTANT - For ANY visualization or plot:
+    1. NEVER return the plot object directly
+    2. ALWAYS convert the plot to a base64 string using this pattern:
+       buf = io.BytesIO()
+       [plot_object].fig.savefig(buf, format='png', bbox_inches='tight')
+       buf.seek(0)
+       image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+       buf.close()
+       plt.close()
+       return image_base64
 
+    If you are using seaborn's jointplot or any other statistical plot that creates its own figure:
+    1. Don't use plt.figure() before the plot
+    2. Store the plot object (e.g. g = sns.jointplot(...))
+    3. Use g.fig instead of plt when saving
+    4. Add titles and labels using the plot object methods if needed (e.g. g.ax_joint.set_xlabel(...))
+    """
     response = llm_gemini.generate_content(func_prompt)
     print("1 - Generated Python Function Response:")
     # print(response.text)
