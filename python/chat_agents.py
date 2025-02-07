@@ -19,10 +19,6 @@ from rich import print
 import re
 import matplotlib.pyplot as plt
 from io import BytesIO, StringIO
-import base64
-import os
-import ast
-import json
 import os
 import google.generativeai as genai
 from data.synthetic_df import gen_synthetic_df

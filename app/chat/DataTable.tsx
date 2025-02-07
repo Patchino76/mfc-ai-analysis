@@ -5,21 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { DataRow } from "./page";
+
+
 
 interface DataTableProps {
-  tableData: any[];
+  tableData: DataRow[];
 }
 
 export function DataTable({ tableData }: DataTableProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [dateString, setDateString] = useState('');
-  const headers = Object.keys(tableData[0]);
-  // console.log("Headers!!!:", headers);
-
-  useEffect(() => {
-    setDateString(new Date().toLocaleDateString());
-  }, []);
+  const headers = Object.keys(tableData[0] || {});
 
   return (
     <Card className="h-full">
@@ -51,7 +48,7 @@ export function DataTable({ tableData }: DataTableProps) {
                   <TableRow key={rowIndex}>
                     {headers.map((header) => (
                       <TableCell key={`${rowIndex}-${header}`}>
-                        {row[header]?.toString() || '-'}
+                        {(row[header]?.toString() || '-')}
                       </TableCell>
                     ))}
                   </TableRow>

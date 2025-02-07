@@ -3,13 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Copy } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "./DataTable";
-import { ImageDisplay } from "./ImageDisplay";
 import { useChat, ChatResponse } from "../hooks/useChat";
 import { useState } from "react";
+import Image from 'next/image';
 
 type MessageSender = "user" | "system";
+export type DataRow = Record<string, string | number>;
 
 interface BaseMessage {
     sender: MessageSender;
@@ -23,7 +23,7 @@ interface TextMessage extends BaseMessage {
 
 interface TableMessage extends BaseMessage {
     type: "table";
-    data: Record<string, any>[];
+    data: DataRow[];
 }
 
 interface ImageMessage extends BaseMessage {
@@ -128,11 +128,14 @@ const ChatPage = () => {
                     </div>
                   ) : (
                     <div className="w-full p-4 bg-muted rounded-lg">
-                      <img 
-                        src={`data:image/png;base64,${msg.base64Data}`}
-                        alt="Generated visualization"
-                        className="max-w-full h-auto"
-                      />
+                      <div className="relative w-full" style={{ minHeight: '300px' }}>
+                        <Image
+                          src={`data:image/png;base64,${msg.base64Data}`}
+                          alt="Generated visualization"
+                          className="object-contain"
+                          fill
+                        />
+                      </div>
                     </div>
                   )}
                 </div>

@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { SensorData, sensorData } from "@/data/sensorData";
+import { SensorData } from "@/data/sensorData";
 import { ArrowUpDown } from "lucide-react";
 
 interface SensorTableProps {

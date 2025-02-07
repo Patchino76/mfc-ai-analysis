@@ -1,9 +1,10 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { apiBaseUrl } from "../config";
+import { DataRow } from "../chat/page";
 
 export interface ChatResponse {
-    dataframe?: Record<string, any>[];
+    dataframe?: DataRow[];
     text?: string;
     image?: string;
 }

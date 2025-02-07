@@ -5,26 +5,12 @@ from rich import print
 import os
 
 #%%
-# def load_dispatchers_data(file_path) -> pd.DataFrame:
-#     # Get the directory where this script is located
-#     current_dir = os.path.dirname(os.path.abspath(__file__))
-#     # Construct absolute path to the CSV file
-#     absolute_path = os.path.join(current_dir, file_path)
+def load_dispatchers_data(file_name = "dispatchers_en_22.csv") -> pd.DataFrame:
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Construct absolute path to the CSV file
+    file_path = os.path.join(script_dir, file_name)
     
-#     # Load the CSV file without using the first column as index
-#     df = pd.read_csv(absolute_path, index_col=False)
-    
-#     # Drop the 'Unnamed: 0' column if it exists
-#     if 'Unnamed: 0' in df.columns:
-#         df.drop(columns=['Unnamed: 0'], inplace=True)
-    
-#     # Create a timestamp index with 8-hour frequency
-#     start_time = pd.Timestamp('2022-01-01 00:00:00')
-#     df.index = pd.date_range(start=start_time, periods=len(df), freq='8h')
-    
-#     return df
-def load_dispatchers_data(file_path = "c:/projects/mfc-ai-analysis/python/data/dispatchers_en_22.csv") -> pd.DataFrame:
-
     df = pd.read_csv(file_path, index_col=False)
     
     # Drop the 'Unnamed: 0' column if it exists

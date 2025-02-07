@@ -1,6 +1,12 @@
 import pandas as pd
+import os
 
-def load_dispatchers(file_path) -> pd.DataFrame:
+def load_dispatchers(file_name) -> pd.DataFrame:
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Construct the full path to the data file
+    file_path = os.path.join(script_dir, 'data', file_name)
+    
     # Load the CSV file without using the first column as index
     df = pd.read_csv(file_path, index_col=False)
     
@@ -14,5 +20,5 @@ def load_dispatchers(file_path) -> pd.DataFrame:
     
     return df
 
-df = load_dispatchers('python/data/dispatchers_en_22.csv')
+df = load_dispatchers('dispatchers_en_22.csv')
 print(df.head())
