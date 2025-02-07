@@ -87,23 +87,29 @@ def generate_python_function(state : AgentState):
     """
     response = llm_gemini.generate_content(func_prompt)
     print("1 - Generated Python Function Response:")
-    # print(response.text)
+    print(response.text)
     extracted_function = extract_function_code(response.text)
     state["generated_code"] = extracted_function
     return state # Return the updated state
 
 
 def extract_function_code(generated_code: str) -> str:
+    print("Original code:")
+    print(generated_code)
+    
+    # First try to extract code from markdown code blocks
+    code_block_match = re.search(r"```python\n(.*?)```", generated_code, re.DOTALL)
+    if code_block_match:
+        generated_code = code_block_match.group(1).strip()
+        print("\nExtracted from code block:")
+        print(generated_code)
 
-    # Extract and execute the function
-    function_match = re.search(r"(def\s+\w+\(.*?\):\n(?:\s+.*\n)*)", generated_code, re.DOTALL)
-    if not function_match:
+    # Extract the function definition by finding the first occurrence of 'def '
+    index = generated_code.find('def ')
+    if index == -1:
         raise ValueError("Error: Could not extract a valid function definition from the generated code.")
+    return generated_code[index:]
 
-    function_body = function_match.group(1)
-    print("2 - Extracted Function Body:")
-    # print(function_body)
-    return function_body
 
 @tool
 def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_code")], tool_call_id: Annotated[str, InjectedToolCallId]) -> Any:

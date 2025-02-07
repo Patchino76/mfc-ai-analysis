@@ -4,6 +4,11 @@ matplotlib.use('Agg')  # Set the backend before importing pyplot
 from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Any, List, Dict
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 from pydantic import BaseModel, Field
 from datetime import datetime, timedelta
@@ -14,7 +19,12 @@ from urllib.parse import unquote
 import base64
 
 app = FastAPI()
-origins = ["http://localhost:3000", "https://localhost:3000"]
+origins = [
+    "http://localhost:3000",
+    "https://localhost:3000",
+    "http://em-m-db4.ellatzite-med.com:3000",
+    "http://em-m-db4.ellatzite-med.com:8000"
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -65,4 +75,11 @@ async def get_chat(query: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("fast_api:app", host="localhost", port=8000, reload=True)
+    # Get environment from .env file
+    environment = os.getenv("ENVIRONMENT", "development")
+    
+    if environment == "development":
+        uvicorn.run("fast_api:app", host="localhost", port=8000, reload=True)
+    else:
+        # For production
+        uvicorn.run("fast_api:app", host="0.0.0.0", port=8000, reload=False)
