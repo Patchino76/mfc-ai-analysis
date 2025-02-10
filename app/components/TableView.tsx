@@ -60,14 +60,15 @@ export function TableView({ data, className }: SensorTableProps) {
   });
 
   return (
-    <div className={`${className} rounded-md border`}>
-      <div className="overflow-x-auto">
-        <Table className="min-w-full divide-y divide-gray-200 shadow-sm">
-          <TableHeader className="bg-gray-50">
+    <div className={`${className} rounded-md border grid grid-rows-[auto_1fr]`}>
+      {/* Fixed Header */}
+      <div className="bg-gray-50 border-b">
+        <Table>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="px-4 py-2 border-b">
+                  <TableHead key={header.id} className="px-4 py-2">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -77,6 +78,12 @@ export function TableView({ data, className }: SensorTableProps) {
               </TableRow>
             ))}
           </TableHeader>
+        </Table>
+      </div>
+
+      {/* Scrollable Body */}
+      <div className="overflow-auto">
+        <Table>
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (

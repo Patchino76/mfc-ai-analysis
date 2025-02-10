@@ -12,11 +12,13 @@ load_dotenv(override=True)
 
 from pydantic import BaseModel, Field
 from datetime import datetime, timedelta
-from data.gen_dataframe import load_dispatchers
 from chat_agents import run_graph
 import pandas as pd
 from urllib.parse import unquote
 import base64
+
+from data.dispatchers_data import create_data_prompt, load_dispatchers_data
+# from data.gen_dataframe import load_dispatchers
 
 app = FastAPI()
 origins = [
@@ -36,7 +38,7 @@ app.add_middleware(
 
 @app.get("/dispatchers", response_model=List[Dict[str, Any]])
 def get_dispatchers_df():
-    df = load_dispatchers()
+    df = load_dispatchers_data(return_timestamp_index = True, return_cyrilic_columns=True)
     return df.to_dict('records')
 
 

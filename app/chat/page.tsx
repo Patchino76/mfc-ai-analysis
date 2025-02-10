@@ -1,12 +1,17 @@
 "use client";
 import { Textarea } from "@/components/ui/textarea"; // Add Textarea import
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Send, Copy } from "lucide-react";
 import { DataTable } from "./DataTable";
-import { useChat, ChatResponse } from "../hooks/useChat";
+import { useChat, ChatResponse, useRawTable } from "../hooks/useChat";
 import { useState } from "react";
 import Image from 'next/image';
+import { TableView } from "../components/TableView";
+import { sensorData } from '@/data/sensorData';
+import { DataTableRaw } from "./DataTableRaw";
+
 
 type MessageSender = "user" | "system";
 export type DataRow = Record<string, string | number>;
@@ -34,6 +39,7 @@ interface ImageMessage extends BaseMessage {
 type ChatMessage = TextMessage | TableMessage | ImageMessage;
 
 const ChatPage = () => {
+  const {data : rawTableData} = useRawTable();
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
       { type: "text", text: "Историята на чата...", sender: "system" },
@@ -100,71 +106,99 @@ const ChatPage = () => {
   };
 
   return (
-      <div className="min-h-screen p-4 bg-background">
-        <div className="max-w-7xl mx-auto space-y-4">
-          <ScrollArea className="h-[800px] w-full overflow-x-auto rounded-md border p-4">
-            <div className="min-w-full">
-              {chatHistory.map((msg, index) => (
-                <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-                  {msg.type === "text" ? (
-                    <div className="inline-flex items-center gap-2">
-                      <div className={`inline-block p-2 rounded-lg ${
-                        msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                      }`}>
-                        {msg.text}
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => navigator.clipboard.writeText(msg.text)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ) : msg.type === "table" ? (
-                    <div className="w-full p-4 bg-muted rounded-lg">
-                      <DataTable tableData={msg.data} />
-                    </div>
-                  ) : (
-                    <div className="w-full p-4 bg-muted rounded-lg">
-<div className="relative w-full h-[800px]"> {/* Increased from default height */}
-  <Image
-    src={`data:image/png;base64,${msg.base64Data}`}
-    alt="Generated visualization"
-    className="object-contain"
-    fill
-    sizes="(max-width: 768px) 100vw, 80vw"  // Add responsive sizing
-  />
-</div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-
-          <div className="flex flex-col gap-4 p-4 border-t">
-            <form onSubmit={handleSubmit} className="flex gap-4">
-              <Textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 min-h-[80px] resize-y"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit(e);
-                  }
-                }}
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-1">
+        <Tabs defaultValue="chat" className="flex flex-col h-screen">
+          <div className="flex items-center justify-between px-4 py-2 border-b">
+            <TabsList>
+              <TabsTrigger value="chat">Chat</TabsTrigger>
+              <TabsTrigger value="data">Data</TabsTrigger>
+            </TabsList>
+            <h1 className="text-xl font-semibold">AI Анализи</h1>
+            <div className="relative h-15 w-48">
+              <Image
+                src="/images/em_logo.jpg"
+                alt="Logo"
+                fill
+                className="object-contain"
               />
-              <Button type="submit">
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
+            </div>
           </div>
-        </div>
+
+          <TabsContent value="chat" className="flex-1 overflow-hidden">
+            <div className="flex flex-col h-full">
+              <ScrollArea className="flex-1 p-4">
+                <div className="space-y-4">
+                  {chatHistory.map((msg, index) => (
+                    <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
+                      {msg.type === "text" ? (
+                        <div className="inline-flex items-center gap-2">
+                          <div className={`inline-block p-2 rounded-lg ${
+                            msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                          }`}>
+                            {msg.text}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => navigator.clipboard.writeText(msg.text)}
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : msg.type === "table" ? (
+                        <div className="w-full p-4 bg-muted rounded-lg">
+                          <DataTable tableData={msg.data} />
+                        </div>
+                      ) : (
+                        <div className="w-full p-4 bg-muted rounded-lg">
+                          <div className="relative w-full h-[800px]">
+                            <Image
+                              src={`data:image/png;base64,${msg.base64Data}`}
+                              alt="Generated visualization"
+                              className="object-contain"
+                              fill
+                              sizes="(max-width: 768px) 100vw, 80vw"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+              <div className="p-4 border-t">
+                <form onSubmit={handleSubmit} className="flex items-center space-x-2">
+                  <Textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Type your message..."
+                    className="flex-1"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSubmit(e);
+                      }
+                    }}
+                  />
+                  <Button type="submit">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </form>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="data" className="flex-1 h-[calc(100vh-8rem)]">
+            <div className="h-full grid grid-rows-1">
+              {/* <TableView data={sensorData} className="h-full" /> */}
+              {rawTableData && <DataTableRaw tableData={rawTableData} />}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
+    </div>
   );
 };
 
