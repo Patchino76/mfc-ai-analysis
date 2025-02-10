@@ -10,7 +10,9 @@ export interface ChatResponse {
 }
 
 export function useChat() {
+    console.log("apiBaseUrl:", apiBaseUrl)
   return useMutation<ChatResponse, Error, string>({
+    
       mutationFn: async (query: string) => {
           const response = await axios.get<ChatResponse>(`${apiBaseUrl}/chat`, 
               { params: { query } });

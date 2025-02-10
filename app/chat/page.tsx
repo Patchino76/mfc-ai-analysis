@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea"; // Add Textarea import
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Copy } from "lucide-react";
@@ -128,14 +128,15 @@ const ChatPage = () => {
                     </div>
                   ) : (
                     <div className="w-full p-4 bg-muted rounded-lg">
-                      <div className="relative w-full" style={{ minHeight: '300px' }}>
-                        <Image
-                          src={`data:image/png;base64,${msg.base64Data}`}
-                          alt="Generated visualization"
-                          className="object-contain"
-                          fill
-                        />
-                      </div>
+<div className="relative w-full h-[800px]"> {/* Increased from default height */}
+  <Image
+    src={`data:image/png;base64,${msg.base64Data}`}
+    alt="Generated visualization"
+    className="object-contain"
+    fill
+    sizes="(max-width: 768px) 100vw, 80vw"  // Add responsive sizing
+  />
+</div>
                     </div>
                   )}
                 </div>
@@ -143,17 +144,25 @@ const ChatPage = () => {
             </div>
           </ScrollArea>
 
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <Input
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type your message..."
-              className="flex-1"
-            />
-            <Button type="submit">
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
+          <div className="flex flex-col gap-4 p-4 border-t">
+            <form onSubmit={handleSubmit} className="flex gap-4">
+              <Textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1 min-h-[80px] resize-y"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
+              />
+              <Button type="submit">
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
   );

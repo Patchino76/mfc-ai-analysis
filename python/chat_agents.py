@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO, StringIO
 import os
 import google.generativeai as genai
-from data.synthetic_df import gen_synthetic_df
+# from data.synthetic_df import gen_synthetic_df
 from data.dispatchers_data import create_data_prompt, load_dispatchers_data
 
 load_dotenv(override=True)
@@ -74,6 +74,7 @@ def generate_python_function(state : AgentState):
        buf.close()
        plt.close()
        return image_base64
+    3. Always plot big size figures.
 
     If you are using seaborn's jointplot or any other statistical plot that creates its own figure:
     1. Don't use plt.figure() before the plot

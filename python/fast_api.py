@@ -8,11 +8,11 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
+load_dotenv(override=True)
 
 from pydantic import BaseModel, Field
 from datetime import datetime, timedelta
-from gen_dataframe import load_dispatchers
+from data.gen_dataframe import load_dispatchers
 from chat_agents import run_graph
 import pandas as pd
 from urllib.parse import unquote
