@@ -42,60 +42,59 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="space-y-6">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label htmlFor="example-questions" className="block text-sm font-medium text-gray-700 mb-1">
-            Example Questions
+            Примерни въпроси
           </label>
-          <Select onValueChange={setSelectedQuestion} value={selectedQuestion}>
-            <SelectTrigger id="example-questions">
-              <SelectValue placeholder="Select a question" />
-            </SelectTrigger>
-            <SelectContent>
-              {exampleQuestions.map((question, index) => (
-                <SelectItem key={index} value={question}>
-                  Question {index + 1}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        {data.slice(0, Math.ceil(data.length / 2)).map((item, index) => (
-          <Card
-            key={index}
-            className="flex flex-col shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full"
-          >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Question {index + 1}</CardTitle>
-              {item.type === "dataframe" ? (
-                <Table className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <BarChart2 className="h-4 w-4 text-muted-foreground" />
-              )}
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <div className="text-2xl font-bold">{item.type === "dataframe" ? "Dataframe" : "Graph"}</div>
-              <p className="text-xs text-muted-foreground mt-2">{item.question}</p>
-              <CardDescription className="mt-4">
-                <strong>Expected Response:</strong> {item.expectedResponse}
-              </CardDescription>
-              <CardDescription className="mt-2">
-                <strong>Goal:</strong> {item.goal}
-              </CardDescription>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button size="sm" onClick={() => handleSend(item)} className="px-3 py-1">
-                <Send className="mr-2 h-4 w-4" /> Send
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                className="w-full justify-between h-auto min-h-[40px] py-2"
+              >
+                {selectedQuestion ? (
+                  <div className="text-sm text-left line-clamp-2">
+                    {selectedQuestion}
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground">Изберете въпрос</span>
+                )}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-      <div className="space-y-6">
+            </PopoverTrigger>
+            <PopoverContent className="w-[600px] p-0">
+              <Command>
+                <CommandInput placeholder="Търсене на въпроси..." className="h-9" />
+                <CommandList className="max-h-[400px] overflow-auto">
+                  <CommandEmpty>Няма намерени въпроси.</CommandEmpty>
+                  <CommandGroup>
+                    {exampleQuestions.map((question, index) => (
+                      <CommandItem
+                        key={index}
+                        value={question}
+                        onSelect={() => setSelectedQuestion(question)}
+                        className="px-4 py-2 cursor-pointer hover:bg-accent"
+                      >
+                        <div className="text-sm whitespace-pre-wrap pr-8">
+                          {question}
+                        </div>
+                        {selectedQuestion === question && (
+                          <Check className="ml-auto h-4 w-4 flex-shrink-0" />
+                        )}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
         <div>
           <label htmlFor="parameters" className="block text-sm font-medium text-gray-700 mb-1">
-            Parameters
+            Параметри
           </label>
           <div className="flex items-center space-x-4">
             <Popover open={openParams} onOpenChange={setOpenParams}>
@@ -107,13 +106,13 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
                   aria-expanded={openParams}
                   className="flex-1 justify-between"
                 >
-                  Select parameters
+                  Изберете параметри
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[200px] p-0">
                 <Command>
-                  <CommandInput placeholder="Search parameters..." />
+                  <CommandInput placeholder="Избор на параметри..." />
                   <CommandList>
                     <CommandEmpty>No parameter found.</CommandEmpty>
                     <CommandGroup>
@@ -136,30 +135,33 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
             <Button onClick={handleGenerate}>Generate</Button>
           </div>
         </div>
-        {data.slice(Math.ceil(data.length / 2)).map((item, index) => (
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
+        {data.map((item, index) => (
           <Card
             key={index}
-            className="flex flex-col shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full"
+            className="shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col"
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Question {index + Math.ceil(data.length / 2) + 1}</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 py-2">
+              <CardTitle className="text-sm font-medium">Question {index + 1}</CardTitle>
               {item.type === "dataframe" ? (
                 <Table className="h-4 w-4 text-muted-foreground" />
               ) : (
                 <BarChart2 className="h-4 w-4 text-muted-foreground" />
               )}
             </CardHeader>
-            <CardContent className="flex-grow">
+            <CardContent className="py-2 flex-grow">
               <div className="text-2xl font-bold">{item.type === "dataframe" ? "Dataframe" : "Graph"}</div>
-              <p className="text-xs text-muted-foreground mt-2">{item.question}</p>
-              <CardDescription className="mt-4">
+              <p className="text-xs text-muted-foreground mt-1">{item.question}</p>
+              <CardDescription className="mt-2">
                 <strong>Expected Response:</strong> {item.expectedResponse}
               </CardDescription>
-              <CardDescription className="mt-2">
+              <CardDescription className="mt-1">
                 <strong>Goal:</strong> {item.goal}
               </CardDescription>
             </CardContent>
-            <CardFooter className="flex justify-end">
+            <CardFooter className="flex justify-end pt-2">
               <Button size="sm" onClick={() => handleSend(item)} className="px-3 py-1">
                 <Send className="mr-2 h-4 w-4" /> Send
               </Button>
@@ -170,4 +172,3 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
     </div>
   )
 }
-
