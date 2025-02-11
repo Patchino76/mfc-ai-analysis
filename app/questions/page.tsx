@@ -1,19 +1,14 @@
+'use client'
+import { useEffect, useState } from "react"
+import { useCoumnNames } from "../hooks/useChat"
 import { DataCards } from "./DataCards"
 import { dataList } from "./dataTypes"
 
-const parameters = [
-  { name: "Parameter 1", checked: false },
-  { name: "Parameter 2", checked: false },
-  { name: "Parameter 3", checked: false },
-  { name: "Parameter 4", checked: false },
-  { name: "Parameter 5", checked: false },
-  { name: "Parameter 6", checked: false },
-  { name: "Parameter 7", checked: false },
-  { name: "Parameter 8", checked: false },
-  { name: "Parameter 9", checked: false },
-  { name: "Parameter 10", checked: false },
-]
 
+export interface Parameter {
+  name: string
+  checked: boolean
+}
 
 const exampleQuestions = [
    "1. Анализ на общия производствен обем с течение на времето:  Изследване на тенденцията на общото произведено количество през времето, за да се види динамиката на производството.",
@@ -29,13 +24,25 @@ const exampleQuestions = [
   ]
 
 export default function QuestionsPage() {
+  const [params, setParams] = useState<Parameter[]>()
+  const { data: columnNames } = useCoumnNames()
+
+  useEffect(() => {
+    if (columnNames) {
+      const newParams = columnNames.map((name) => ({
+        name,
+        checked: false
+      }))
+      setParams(newParams)
+    }
+  }, [columnNames])
+
   return (
     <main className="min-h-screen bg-background">
       <div className="container mx-auto py-10 px-4 max-w-7xl">
         <h1 className="text-4xl font-bold mb-10 text-center">Data Visualization Questions</h1>
-        <DataCards data={dataList} parameters={parameters} exampleQuestions={exampleQuestions} />
+        {params &&  <DataCards data={dataList} parameters={params} exampleQuestions={exampleQuestions} />}
       </div>
     </main>
   )
 }
-

@@ -17,8 +17,8 @@ import pandas as pd
 from urllib.parse import unquote
 import base64
 
-from data.dispatchers_data import create_data_prompt, load_dispatchers_data
-# from data.gen_dataframe import load_dispatchers
+from data.dispatchers_data import create_data_prompt, load_dispatchers_data, get_columns_names_bg
+from data_questions import get_df_questions
 
 app = FastAPI()
 origins = [
@@ -74,6 +74,18 @@ async def get_chat(query: str):
         if is_base64_image(exec_result):
             return {"image": exec_result}
         return {"text": exec_result}
+
+@app.get("/column_names")
+def get_columns_names():
+    return get_columns_names_bg()
+
+@app.get("/df_questions") #, response_model=List[Dict[str, Any]]
+def df_questions(question: str = "", selectedParams: str = ""):
+    print("Query: ", question)
+    print("Params: ", selectedParams)
+    result =  get_df_questions(question, selectedParams)
+    print("Result: ", result)
+    return result
 
 if __name__ == "__main__":
     import uvicorn

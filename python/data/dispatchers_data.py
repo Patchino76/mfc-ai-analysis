@@ -1,3 +1,10 @@
+#%%
+import pandas as pd
+import io
+from rich import print
+import os
+
+#%%
 # Column name mappings
 column_descriptions = {
     'Shift': 'Смяна',
@@ -29,11 +36,6 @@ column_descriptions = {
     'ThickenerWeight': 'Литрово тегло в сгъстителя'
 }
 
-#%%
-import pandas as pd
-import io
-from rich import print
-import os
 
 #%%
 def load_dispatchers_data(file_name = "dispatchers_en_22.csv", return_timestamp_index = False, return_cyrilic_columns = False) -> pd.DataFrame:
@@ -104,6 +106,13 @@ def create_data_prompt():
     )
     return prompt
 # %%
-prompt = create_data_prompt()
-print(prompt)
+# prompt = create_data_prompt()
+# print(prompt)
+# %%
+def get_columns_names_bg():
+    bg_names = [col for col in column_descriptions.values()]
+    return bg_names
+
+# print(get_columns_names_bg())
+
 # %%

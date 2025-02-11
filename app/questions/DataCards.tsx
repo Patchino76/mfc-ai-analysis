@@ -1,21 +1,20 @@
 "use client"
-
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
-import type { DataItem, Parameter } from "./dataTypes"
 import { BarChart2, Table, Send, ChevronsUpDown, Check, Plus, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Parameter } from "./page"
+import { QuestionItem, useGenerateQuestion } from "../hooks/useChat"
 
 interface DataCardsProps {
-  data: DataItem[]
+  data: QuestionItem[]
   parameters: Parameter[]
   exampleQuestions: string[]
 }
@@ -29,6 +28,14 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
   const [activeTab, setActiveTab] = useState("example")
   const [openQuestionSelector, setOpenQuestionSelector] = useState(false)
 
+  const { mutate: generateQuestion, data: generatedQuestions, isLoading } = useGenerateQuestion();
+
+  useEffect(() => {
+    if (generatedQuestions) {
+      console.log("Generated questions:", generatedQuestions);
+    }
+  }, [generatedQuestions]);
+
   const handleTabChange = (value: string) => {
     setActiveTab(value)
     setSelectedQuestion("")
@@ -41,7 +48,7 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
     }
   }
 
-  const handleSend = (item: DataItem) => {
+  const handleSend = (item: QuestionItem) => {
     console.log("Sending data:", item)
     // Here you would implement the actual sending logic
   }
@@ -53,10 +60,15 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
   }
 
   const handleGenerate = () => {
-    console.log("Generating with:", {
-      selectedQuestion,
-      selectedParameters: selectedParameters.filter((p) => p.checked).map((p) => p.name),
-    })
+    const selectedParams = selectedParameters
+      .filter((p) => p.checked)
+      .map((p) => p.name)
+      .join(", ");
+      
+    generateQuestion({
+      question: selectedQuestion,
+      selectedParams
+    });
   }
 
   const handleRemoveQuestion = (questionToRemove: string) => {
@@ -207,7 +219,7 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0" align="start">
+              <PopoverContent className="w-full p-0" align="start">
                 <Command>
                   <div className="flex items-center justify-between p-2 border-b">
                     <CommandInput placeholder="Избор на параметри..." className="h-9" />

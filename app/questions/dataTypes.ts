@@ -1,18 +1,8 @@
-export type QuestionType = "dataframe" | "graph"
+// export type QuestionType = "dataframe" | "graph"
 
-export interface DataItem {
-  question: string
-  expectedResponse: string
-  goal: string
-  type: QuestionType
-}
+import { QuestionItem } from "../hooks/useChat"
 
-export interface Parameter {
-  name: string
-  checked: boolean
-}
-
-export const dataList: DataItem[] = [
+export const dataList: QuestionItem[] = [
   {
     question:
       "Създай таблица, показваща коефициентите на корелация на Пиърсън между всички двойки от следните колони: Подадена руда от МГТЛ за денонощието, Натрошена руда от Цех ССТ, Преработена руда в цех МФЦ и Добит меден концентрат.",

@@ -2,14 +2,14 @@ import type React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { BarChart2, Table, Send } from "lucide-react"
-import { DataItem } from "./dataTypes"
+import { QuestionItem } from "./dataTypes"
 
 interface DataVisualizationCardsProps {
-  data: DataItem[]
+  data: QuestionItem[]
 }
 
 export const DataVisualizationCards: React.FC<DataVisualizationCardsProps> = ({ data }) => {
-  const handleSend = (item: DataItem) => {
+  const handleSend = (item: QuestionItem) => {
     console.log("Sending data:", item)
     // Here you would implement the actual sending logic
   }
