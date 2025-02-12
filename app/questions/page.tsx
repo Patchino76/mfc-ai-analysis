@@ -1,15 +1,13 @@
 'use client'
 import { useEffect, useState } from "react"
-import { useCoumnNames } from "../hooks/useChat"
+import { QuestionResponse, useCoumnNames } from "../hooks/useChat"
 import { DataCards } from "./DataCards"
-import { dataList } from "./dataTypes"
-
 
 export interface Parameter {
   name: string
   checked: boolean
 }
-
+const dataList: QuestionResponse[] = []
 const exampleQuestions = [
    "1. Анализ на общия производствен обем с течение на времето:  Изследване на тенденцията на общото произведено количество през времето, за да се види динамиката на производството.",
    "2. Корелационен анализ между входящи суровини и краен продукт:  Определяне на връзката между използваните суровини и произведената продукция, за да се оптимизира използването на ресурси.",
@@ -41,7 +39,7 @@ export default function QuestionsPage() {
     <main className="min-h-screen bg-background">
       <div className="container mx-auto py-10 px-4 max-w-7xl">
         <h1 className="text-4xl font-bold mb-10 text-center">Data Visualization Questions</h1>
-        {params &&  <DataCards data={dataList} parameters={params} exampleQuestions={exampleQuestions} />}
+        {params &&  <DataCards  parameters={params} exampleQuestions={exampleQuestions} />}
       </div>
     </main>
   )

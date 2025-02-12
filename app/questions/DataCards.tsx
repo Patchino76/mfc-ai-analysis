@@ -11,15 +11,14 @@ import { Input } from "@/components/ui/input"
 import { BarChart2, Table, Send, ChevronsUpDown, Check, Plus, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Parameter } from "./page"
-import { QuestionItem, useGenerateQuestion } from "../hooks/useChat"
+import { QuestionResponse, useGenerateQuestion } from "../hooks/useChat"
 
 interface DataCardsProps {
-  data: QuestionItem[]
   parameters: Parameter[]
   exampleQuestions: string[]
 }
 
-export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQuestions }) => {
+export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
   const [selectedQuestion, setSelectedQuestion] = useState<string>("")
   const [selectedParameters, setSelectedParameters] = useState<Parameter[]>(parameters)
   const [openParams, setOpenParams] = useState(false)
@@ -28,13 +27,13 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
   const [activeTab, setActiveTab] = useState("example")
   const [openQuestionSelector, setOpenQuestionSelector] = useState(false)
 
-  const { mutate: generateQuestion, data: generatedQuestions, isLoading } = useGenerateQuestion();
+  const { mutate: generateQuestion, data, isLoading } = useGenerateQuestion();
 
   useEffect(() => {
-    if (generatedQuestions) {
-      console.log("Generated questions:", generatedQuestions);
+    if (data) {
+      console.log("Generated questions:", data);
     }
-  }, [generatedQuestions]);
+  }, [data]);
 
   const handleTabChange = (value: string) => {
     setActiveTab(value)
@@ -48,7 +47,7 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
     }
   }
 
-  const handleSend = (item: QuestionItem) => {
+  const handleSend = (item: QuestionResponse) => {
     console.log("Sending data:", item)
     // Here you would implement the actual sending logic
   }
@@ -258,7 +257,7 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
-        {data.map((item, index) => (
+        {data?.map((item, index) => (
           <Card
             key={index}
             className="shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col"
@@ -275,7 +274,7 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
               <div className="text-2xl font-bold">{item.type === "dataframe" ? "Dataframe" : "Graph"}</div>
               <p className="text-xs text-muted-foreground mt-1">{item.question}</p>
               <CardDescription className="mt-2">
-                <strong>Expected Response:</strong> {item.expectedResponse}
+                <strong>Expected Response:</strong> {item.response}
               </CardDescription>
               <CardDescription className="mt-1">
                 <strong>Goal:</strong> {item.goal}
@@ -288,6 +287,11 @@ export const DataCards: React.FC<DataCardsProps> = ({ data, parameters, exampleQ
             </CardFooter>
           </Card>
         ))}
+        {!data && (
+          <div className="col-span-2 text-center py-8 text-muted-foreground">
+            No questions generated yet. Select parameters and generate questions to see them here.
+          </div>
+        )}
       </div>
     </div>
   )
