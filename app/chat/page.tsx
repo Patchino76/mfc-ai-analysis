@@ -1,16 +1,15 @@
 "use client";
 import { Textarea } from "@/components/ui/textarea"; // Add Textarea import
 import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea} from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Send, Copy } from "lucide-react";
 import { DataTable } from "./DataTable";
 import { useChat, ChatResponse, useRawTable } from "../hooks/useChat";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from 'next/image';
-import { TableView } from "../components/TableView";
-import { sensorData } from '@/data/sensorData';
 import { DataTableRaw } from "./DataTableRaw";
+import { useSearchParams } from 'next/navigation';
 
 
 type MessageSender = "user" | "system";
@@ -39,6 +38,9 @@ interface ImageMessage extends BaseMessage {
 type ChatMessage = TextMessage | TableMessage | ImageMessage;
 
 const ChatPage = () => {
+  const searchParams = useSearchParams();
+  const question = searchParams.get("question");
+
   const {data : rawTableData} = useRawTable();
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
@@ -46,6 +48,17 @@ const ChatPage = () => {
   ]);
   const chatMutation = useChat();
   
+  useEffect(() => {
+    if (question) {
+      try {
+        const decodedQuestion = decodeURIComponent(question);
+        setMessage(decodedQuestion);
+      } catch (error) {
+        console.error('Error decoding question parameter:', error);
+      }
+    }
+  }, [question]);
+
   const handleSubmit = (e?: React.FormEvent) => {
       e?.preventDefault();
       

@@ -1,13 +1,13 @@
 'use client'
 import { useEffect, useState } from "react"
-import { QuestionResponse, useCoumnNames } from "../hooks/useChat"
+import {  useCoumnNames } from "../hooks/useChat"
 import { DataCards } from "./DataCards"
 
 export interface Parameter {
   name: string
   checked: boolean
 }
-const dataList: QuestionResponse[] = []
+
 const exampleQuestions = [
    "1. Анализ на общия производствен обем с течение на времето:  Изследване на тенденцията на общото произведено количество през времето, за да се види динамиката на производството.",
    "2. Корелационен анализ между входящи суровини и краен продукт:  Определяне на връзката между използваните суровини и произведената продукция, за да се оптимизира използването на ресурси.",

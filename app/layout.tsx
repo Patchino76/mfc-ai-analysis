@@ -4,6 +4,7 @@ import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import QueryClientProvider from "./QueryClientProvider";
 import ThemeProvider from "./providers/ThemeProvider";
+import { NavBar } from "./NavBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
         <QueryClientProvider>
           <ThemeProvider>
-            {children}
+          <NavBar />
+          <main>{children}</main>
           </ThemeProvider>
         </QueryClientProvider>
       </body>
