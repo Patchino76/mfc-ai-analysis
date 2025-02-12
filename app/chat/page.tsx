@@ -2,10 +2,9 @@
 import { Textarea } from "@/components/ui/textarea"; // Add Textarea import
 import { Button } from "@/components/ui/button";
 import { ScrollArea} from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Send, Copy } from "lucide-react";
 import { DataTable } from "./DataTable";
-import { useChat, ChatResponse, useRawTable } from "../hooks/useChat";
+import { useChat, ChatResponse } from "../hooks/useChat";
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 
@@ -41,11 +40,8 @@ const ChatPage = () => {
   const searchParams = useSearchParams();
   const question = searchParams.get("question");
 
-  const {data : rawTableData} = useRawTable();
   const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
-      { type: "text", text: "Историята на чата...", sender: "system" },
-  ]);
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const chatMutation = useChat();
   
   useEffect(() => {
@@ -124,7 +120,7 @@ const ChatPage = () => {
 
           <div className="flex items-center justify-between px-4 py-2 border-b">
 
-            <h1 className="text-xl font-semibold">AI Анализи</h1>
+            <h1 className="text-md font-normal">История</h1>
             <div className="relative h-15 w-48">
               <Image
                 src="/images/em_logo.jpg"

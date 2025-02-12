@@ -74,7 +74,7 @@ def generate_python_function(state : AgentState):
        buf.close()
        plt.close()
        return image_base64
-    3. Always plot big size figures.
+    3. Always plot big size figures with high dpi.
 
     If you are using seaborn's jointplot or any other statistical plot that creates its own figure:
     1. Don't use plt.figure() before the plot
