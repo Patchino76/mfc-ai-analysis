@@ -75,12 +75,12 @@ export function useCoumnNames() {
 
 export function useGenerateQuestion() {
     return useMutation<
-    QuestionResponse,
+    QuestionResponse[],
         Error,
         { question: string; selectedParams: string }
     >({
         mutationFn: async ({ question, selectedParams }) => {
-            const response = await axios.get<QuestionResponse>(`${apiBaseUrl}/df_questions`, {
+            const response = await axios.get<QuestionResponse[]>(`${apiBaseUrl}/df_questions`, {
                 params: { question, selectedParams }
             });
             return response.data;
