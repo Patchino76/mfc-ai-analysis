@@ -14,9 +14,14 @@ import {
 export function NavBar() {
   return (
     <div className="border-b">
-      <div className="flex h-16 items-center px-4">
+      <div className="flex h-16 items-center px-4 justify-between">
         <NavigationMenu>
           <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link href="/rawdata" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Данни</NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/chat" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>Анализи</NavigationMenuLink>
@@ -29,11 +34,11 @@ export function NavBar() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <div className="ml-auto flex items-center space-x-4">
-          <Image src="/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32} />
+        <h1 className="text-2xl font-semibold">АНАЛИЗ НА ДАННИ С ИИ</h1>
+        <div className="flex items-center space-x-4">
+          <Image src="/images/em_logo.jpg" alt="Logo" width={152} height={52} />
         </div>
       </div>
     </div>
   )
 }
-

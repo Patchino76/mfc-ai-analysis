@@ -8,7 +8,7 @@ import { DataTable } from "./DataTable";
 import { useChat, ChatResponse, useRawTable } from "../hooks/useChat";
 import { useState, useEffect } from "react";
 import Image from 'next/image';
-import { DataTableRaw } from "./DataTableRaw";
+
 import { useSearchParams } from 'next/navigation';
 
 
@@ -121,12 +121,9 @@ const ChatPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-1">
-        <Tabs defaultValue="chat" className="flex flex-col h-screen">
+
           <div className="flex items-center justify-between px-4 py-2 border-b">
-            <TabsList>
-              <TabsTrigger value="chat">Chat</TabsTrigger>
-              <TabsTrigger value="data">Data</TabsTrigger>
-            </TabsList>
+
             <h1 className="text-xl font-semibold">AI Анализи</h1>
             <div className="relative h-15 w-48">
               <Image
@@ -138,7 +135,7 @@ const ChatPage = () => {
             </div>
           </div>
 
-          <TabsContent value="chat" className="flex-1 overflow-hidden">
+
             <div className="flex flex-col h-full">
               <ScrollArea className="flex-1 p-4">
                 <div className="space-y-4">
@@ -201,15 +198,7 @@ const ChatPage = () => {
                 </form>
               </div>
             </div>
-          </TabsContent>
-
-          <TabsContent value="data" className="flex-1 h-[calc(100vh-8rem)]">
-            <div className="h-full grid grid-rows-1">
-              {/* <TableView data={sensorData} className="h-full" /> */}
-              {rawTableData && <DataTableRaw tableData={rawTableData} />}
-            </div>
-          </TabsContent>
-        </Tabs>
+    
       </div>
     </div>
   );
