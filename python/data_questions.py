@@ -93,9 +93,15 @@ def get_image_analysis(query: str, image_b64: str):
             ]
         }
     ]
-    response = llm_groq.invoke(llm_prompt)
-    print("Анализ на графиката:", response.content)
-    return response.content
+    #groq
+    # response = llm_groq.invoke(llm_prompt)
+    # print("Анализ на графиката:", response.content)
+    # return response.content
+
+    #gemini
+    response = llm_gemini.generate_content(prompt)
+    print("Анализ на графиката:", response.text)
+    return response.text
 
 def get_df_analysis(query: str, df_result: str):
     df_structure = create_data_prompt()
@@ -103,16 +109,18 @@ def get_df_analysis(query: str, df_result: str):
     Ти си експертен анализатор на данни в минната и обогатителната индустрия. 
     Твоята задача е да анализираш резултатната таблица, получена от анализ на по-голям набор от данни, чиито детайли са описани по-долу.
     
-    Analysis Query: {query}
-    Структура на данните: {df_structure}
-    Резултатна таблица: {df_result}
+    Анализирай следната таблица, получена от въпроса:
+    {query}
     
-    Инструкции:
-    - Интерпретирай въпроса {query} с фокус върху оптимизация на процеси като смилане на руда с топкови мелници и медна флотация.
-    - Анализирай таблицата, като се фокусираш върху ключовите показатели и релевантните колони.
-    - Предостави ценни аналитични изводи, които могат да подпомогнат вземането на управленски решения.
-    - Бъди кратък и ясен.
+    Таблица:
+    {df_result}
+    
+    Структура на данните:
+    {df_structure}
+    
+    Дай кратък и ясен анализ, като обръщаш специално внимание на значими тенденции, аномалии и критични показатели, които показват важната информация за процесите.
     """
+    
     response = llm_gemini.generate_content(prompt)
-    print("Анализ на данните:", response.text)
+    print("Анализ на таблицата:", response.text)
     return response.text

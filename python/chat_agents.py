@@ -81,6 +81,16 @@ def generate_python_function(state : AgentState):
     2. Store the plot object (e.g. g = sns.jointplot(...))
     3. Use g.fig instead of plt when saving
     4. Add titles and labels using the plot object methods if needed (e.g. g.ax_joint.set_xlabel(...))
+
+    You can always return multiple dataframes or graphs if needed. If this is the case yo have to return
+    a list of dictionaries that contain the keys "dataframe" or "graph". Example:
+    [
+        {{"dataframe": "the pandas dataframe"}},
+        {{"graph": "the base64 encoded figure"}}
+    ]
+    In any case you have to return a list with the above structure even if
+    the result is a single dataframe or a single graph.
+    
     """
     response = llm_gemini.generate_content(func_prompt)
     # print("1 - Generated Python Function Response:")

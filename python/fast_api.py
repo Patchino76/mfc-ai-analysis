@@ -69,17 +69,43 @@ async def get_chat(query: str):
     exec_result = run_graph(decoded_query)
     print("Type of exec_result:", type(exec_result))
     
-    if isinstance(exec_result, pd.DataFrame):
-        # print(exec_result.info())
-        exec_result = exec_result.to_dict('records')
-        description = get_df_analysis(query=query, df_result=exec_result)
-        return {"dataframe": exec_result}
+    # Check if exec_result is a list of dictionaries with dataframe or graph keys
+    if isinstance(exec_result, list) and all(
+        isinstance(item, dict) and ('dataframe' in item or 'graph' in item)
+        for item in exec_result
+    ):
+        processed_results = []
+        for item in exec_result:
+            processed_item = {}
+            if 'dataframe' in item and isinstance(item['dataframe'], pd.DataFrame):
+                df_dict = item['dataframe'].to_dict('records')
+                processed_item['dataframe'] = df_dict
+                # Get description after setting dataframe
+                description = get_df_analysis(query=query, df_result=df_dict)
+                processed_item['description'] = description
+            elif 'graph' in item and isinstance(item['graph'], str) and is_base64_image(item['graph']):
+                processed_item['graph'] = item['graph']
+                # Get description after setting graph
+                description = get_image_analysis(query=query, image_b64=item['graph'])
+                processed_item['description'] = description
+            else:
+                processed_item = item
+            processed_results.append(processed_item)
+        return processed_results
 
-    if isinstance(exec_result, str):
-        if is_base64_image(exec_result):
-            description = get_image_analysis(query=query, image_b64=exec_result)
-            return {"image": exec_result}
-        return {"text": exec_result}
+    # if isinstance(exec_result, pd.DataFrame):
+    #     # print(exec_result.info())
+    #     exec_result = exec_result.to_dict('records')
+    #     description = get_df_analysis(query=query, df_result=exec_result)
+    #     return {"dataframe": exec_result, "description": description}
+
+    # if isinstance(exec_result, str):
+    #     if is_base64_image(exec_result):
+    #         description = get_image_analysis(query=query, image_b64=exec_result)
+    #         return {"image": exec_result, "description": description}
+    #     return {"text": exec_result}
+    
+    return False
 
 @app.get("/column_names")
 def get_columns_names():
