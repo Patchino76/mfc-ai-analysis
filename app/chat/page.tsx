@@ -2,10 +2,12 @@
 import { Textarea } from "@/components/ui/textarea"; // Add Textarea import
 import { Button } from "@/components/ui/button";
 import { ScrollArea} from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
 import { Send, Copy } from "lucide-react";
 import { DataTable } from "./DataTable";
+import { useChatStore } from "../store/chatStore";
 import { useChat, ChatResponse } from "../hooks/useChat";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Image from 'next/image';
 
 import { useSearchParams } from 'next/navigation';
@@ -40,38 +42,45 @@ const ChatPage = () => {
   const searchParams = useSearchParams();
   const question = searchParams.get("question");
 
-  const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const { 
+    currentMessage, 
+    setCurrentMessage, 
+    chatHistory, 
+    addMessage,
+    useMatplotlib,
+    togglePlottingPreference,
+    clearChat
+  } = useChatStore();
   const chatMutation = useChat();
   
   useEffect(() => {
     if (question) {
       try {
         const decodedQuestion = decodeURIComponent(question);
-        setMessage(decodedQuestion);
+        setCurrentMessage(decodedQuestion);
       } catch (error) {
         console.error('Error decoding question parameter:', error);
       }
     }
-  }, [question]);
+  }, [question, setCurrentMessage]);
 
   const handleSubmit = (e?: React.FormEvent) => {
       e?.preventDefault();
       
-      if (!message.trim()) return;
+      if (!currentMessage.trim()) return;
       
       // Add user message to chat history
       const userMessage: TextMessage = {
           type: "text",
-          text: message,
+          text: currentMessage + (useMatplotlib ? 
+              " Use matplotlib if you need to plot." : 
+              " Use seaborn library if you need to plot."),
           sender: "user"
       };
-      setChatHistory(prev => [...prev, userMessage]);
+      addMessage(userMessage);
       
-      chatMutation.mutate(message, {
+      chatMutation.mutate(currentMessage, {
           onSuccess: (data: ChatResponse) => {
-              // console.log("Response data:", data);
-              
               if (data?.dataframe) {
                   const tableMessage: TableMessage = {
                       type: "table",
@@ -83,24 +92,25 @@ const ChatPage = () => {
                       text: "Data table has been updated",
                       sender: "system"
                   };
-                  setChatHistory(prev => [...prev, tableMessage, statusMessage]);
+                  addMessage(tableMessage);
+                  addMessage(statusMessage);
               } else if (data?.image) {
                   const imageMessage: ImageMessage = {
                       type: "image",
                       base64Data: data.image,
                       sender: "system"
                   };
-                  setChatHistory(prev => [...prev, imageMessage]);
+                  addMessage(imageMessage);
               } else if (data?.text) {
                   const textMessage: TextMessage = {
                       type: "text",
                       text: data.text,
                       sender: "system"
                   };
-                  setChatHistory(prev => [...prev, textMessage]);
+                  addMessage(textMessage);
               }
               
-              setMessage("");
+              setCurrentMessage("");
           },
           onError: (error) => {
               console.error("Chat error:", error);
@@ -109,7 +119,7 @@ const ChatPage = () => {
                   text: "Error processing your request",
                   sender: "system"
               };
-              setChatHistory(prev => [...prev, errorMessage]);
+              addMessage(errorMessage);
           }
       });
   };
@@ -119,18 +129,15 @@ const ChatPage = () => {
       <div className="flex-1">
 
           <div className="flex items-center justify-between px-4 py-2 border-b">
-
             <h1 className="text-md font-normal">История</h1>
-            <div className="relative h-15 w-48">
-              <Image
-                src="/images/em_logo.jpg"
-                alt="Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => clearChat()}
+            >
+              Reset
+            </Button>
           </div>
-
 
             <div className="flex flex-col h-full">
               <ScrollArea className="flex-1 p-4">
@@ -177,8 +184,8 @@ const ChatPage = () => {
               <div className="p-4 border-t">
                 <form onSubmit={handleSubmit} className="flex items-center space-x-2">
                   <Textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
                     placeholder="Въведете вашият въпрос..."
                     className="flex-1"
                     rows={3}
@@ -189,9 +196,20 @@ const ChatPage = () => {
                       }
                     }}
                   />
-                  <Button type="submit">
-                    <Send className="h-4 w-4" />
-                  </Button>
+                  <div className="flex flex-col items-center space-y-2">
+                    <Button type="submit">
+                      <Send className="h-4 w-4" />
+                    </Button>
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        checked={useMatplotlib}
+                        onCheckedChange={togglePlottingPreference}
+                      />
+                      <span className="text-sm">
+                        {useMatplotlib ? 'plt' : 'sns'}
+                      </span>
+                    </div>
+                  </div>
                 </form>
               </div>
             </div>
