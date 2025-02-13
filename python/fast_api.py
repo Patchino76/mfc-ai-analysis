@@ -81,16 +81,17 @@ async def get_chat(query: str):
                 df_dict = item['dataframe'].to_dict('records')
                 processed_item['dataframe'] = df_dict
                 # Get description after setting dataframe
-                description = get_df_analysis(query=query, df_result=df_dict)
-                processed_item['description'] = description
+                # description = get_df_analysis(query=query, df_result=df_dict)
+                # processed_item['description'] = description
             elif 'graph' in item and isinstance(item['graph'], str) and is_base64_image(item['graph']):
                 processed_item['graph'] = item['graph']
                 # Get description after setting graph
-                description = get_image_analysis(query=query, image_b64=item['graph'])
-                processed_item['description'] = description
+                # description = get_image_analysis(query=query, image_b64=item['graph'])
+                # processed_item['description'] = description
             else:
                 processed_item = item
             processed_results.append(processed_item)
+        print("Processed type:", type(processed_results[0]))
         return processed_results[0]
 
     # if isinstance(exec_result, pd.DataFrame):

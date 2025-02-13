@@ -86,10 +86,8 @@ def generate_python_function(state : AgentState):
     a list of dictionaries that contain the keys "dataframe" or "graph". Example:
     [
         {{"dataframe": "the pandas dataframe"}},
-        {{"graph": "the base64 encoded figure"}}
     ]
-    In any case you have to return a list with the above structure even if
-    the result is a single dataframe or a single graph.
+    Your output must be must be a list with the above example structure.
     
     """
     response = llm_gemini.generate_content(func_prompt)

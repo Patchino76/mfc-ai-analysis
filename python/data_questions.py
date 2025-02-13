@@ -100,7 +100,7 @@ def get_image_analysis(query: str, image_b64: str):
 
     #gemini
     response = llm_gemini.generate_content(prompt)
-    print("Анализ на графиката:", response.text)
+    # print("Анализ на графиката:", response.text)
     return response.text
 
 def get_df_analysis(query: str, df_result: str):
