@@ -16,27 +16,27 @@ import { useSearchParams } from 'next/navigation';
 type MessageSender = "user" | "system";
 export type DataRow = Record<string, string | number>;
 
-interface BaseMessage {
+export interface BaseMessage {
     sender: MessageSender;
-    type: "text" | "table" | "image";
+    type: "text" | "dataframe" | "graph";
 }
 
-interface TextMessage extends BaseMessage {
+export interface TextMessage extends BaseMessage {
     type: "text";
     text: string;
 }
 
-interface TableMessage extends BaseMessage {
-    type: "table";
+export interface TableMessage extends BaseMessage {
+    type: "dataframe";
     data: DataRow[];
 }
 
-interface ImageMessage extends BaseMessage {
-    type: "image";
+export interface ImageMessage extends BaseMessage {
+    type: "graph";
     base64Data: string;
 }
 
-type ChatMessage = TextMessage | TableMessage | ImageMessage;
+export type ChatMessage = TextMessage | TableMessage | ImageMessage;
 
 const ChatPage = () => {
   const searchParams = useSearchParams();
@@ -83,7 +83,7 @@ const ChatPage = () => {
           onSuccess: (data: ChatResponse) => {
               if (data?.dataframe) {
                   const tableMessage: TableMessage = {
-                      type: "table",
+                      type: "dataframe",
                       data: data.dataframe,
                       sender: "system"
                   };
@@ -96,7 +96,7 @@ const ChatPage = () => {
                   addMessage(statusMessage);
               } else if (data?.image) {
                   const imageMessage: ImageMessage = {
-                      type: "image",
+                      type: "graph",
                       base64Data: data.image,
                       sender: "system"
                   };
@@ -160,7 +160,7 @@ const ChatPage = () => {
                             <Copy className="h-4 w-4" />
                           </Button>
                         </div>
-                      ) : msg.type === "table" ? (
+                      ) : msg.type === "dataframe" ? (
                         <div className="w-full p-4 bg-muted rounded-lg">
                           <DataTable tableData={msg.data} />
                         </div>

@@ -91,7 +91,7 @@ async def get_chat(query: str):
             else:
                 processed_item = item
             processed_results.append(processed_item)
-        return processed_results
+        return processed_results[0]
 
     # if isinstance(exec_result, pd.DataFrame):
     #     # print(exec_result.info())

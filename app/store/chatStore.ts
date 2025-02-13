@@ -1,28 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { DataRow } from '../chat/page'
-
-interface BaseMessage {
-    sender: "user" | "system";
-    type: "text" | "table" | "image";
-}
-
-interface TextMessage extends BaseMessage {
-    type: "text";
-    text: string;
-}
-
-interface TableMessage extends BaseMessage {
-    type: "table";
-    data: DataRow[];
-}
-
-interface ImageMessage extends BaseMessage {
-    type: "image";
-    base64Data: string;
-}
-
-type ChatMessage = TextMessage | TableMessage | ImageMessage;
+import { ChatMessage, DataRow } from '../chat/page'
 
 interface ChatState {
     chatHistory: ChatMessage[]
