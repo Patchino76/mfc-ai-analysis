@@ -6,7 +6,7 @@ import { DataRow } from "../chat/page";
 export interface ChatResponse {
     dataframe?: DataRow[];
     text?: string;
-    image?: string;
+    graph?: string;
 }
 
 export interface QuestionItem {

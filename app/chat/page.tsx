@@ -81,6 +81,7 @@ const ChatPage = () => {
       
       chatMutation.mutate(currentMessage, {
           onSuccess: (data: ChatResponse) => {
+            console.log("Received chat response:", data);
               if (data?.dataframe) {
                   const tableMessage: TableMessage = {
                       type: "dataframe",
@@ -94,12 +95,22 @@ const ChatPage = () => {
                   };
                   addMessage(tableMessage);
                   addMessage(statusMessage);
-              } else if (data?.image) {
+              } else if (data?.graph) {
+                  console.log("Received graph data:", {
+                      hasData: !!data.graph,
+                      dataLength: data.graph?.length,
+                      firstChars: data.graph?.substring(0, 50)
+                  });
                   const imageMessage: ImageMessage = {
                       type: "graph",
-                      base64Data: data.image,
+                      base64Data: data.graph,
                       sender: "system"
                   };
+                  console.log("Created image message:", {
+                      type: imageMessage.type,
+                      hasBase64: !!imageMessage.base64Data,
+                      base64Length: imageMessage.base64Data?.length
+                  });
                   addMessage(imageMessage);
               } else if (data?.text) {
                   const textMessage: TextMessage = {

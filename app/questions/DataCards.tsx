@@ -83,7 +83,7 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
 
   const handleParameterChange = (parameterName: string) => {
     setSelectedParameters(
-      selectedParameters.map((param) => 
+      selectedParameters.map((param: { name: string; checked: boolean }) => 
         param.name === parameterName ? { ...param, checked: !param.checked } : param
       )
     )
@@ -94,8 +94,8 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
     setGeneratedData(null);
     
     const selectedParams = selectedParameters
-      .filter((p) => p.checked)
-      .map((p) => p.name)
+      .filter((p: Parameter) => p.checked)
+      .map((p: Parameter) => p.name)
       .join(", ");
       
     generateQuestion({
@@ -105,7 +105,7 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
   }
 
   const handleRemoveQuestion = (questionToRemove: string) => {
-    setCustomQuestions(customQuestions.filter(q => q !== questionToRemove))
+    setCustomQuestions(customQuestions.filter((q: string) => q !== questionToRemove))
     if (selectedQuestion === questionToRemove) {
       setSelectedQuestion("")
     }
@@ -280,7 +280,7 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
                     <CommandList>
                       <CommandEmpty>No parameters found.</CommandEmpty>
                       <CommandGroup>
-                        {selectedParameters.map((parameter) => (
+                        {selectedParameters.map((parameter: Parameter) => (
                           <CommandItem
                             key={parameter.name}
                             onSelect={() => {
@@ -303,9 +303,9 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
               </Popover>
               <Button onClick={handleGenerate}>Генерирай</Button>
             </div>
-            {selectedParameters.some(p => p.checked) && (
+            {selectedParameters.some((p: Parameter) => p.checked) && (
               <div className="text-sm text-muted-foreground">
-                Selected: {selectedParameters.filter(p => p.checked).map(p => p.name).join(", ")}
+                Selected: {selectedParameters.filter((p: Parameter) => p.checked).map((p: Parameter) => p.name).join(", ")}
               </div>
             )}
           </div>
@@ -317,7 +317,7 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
           <div className="col-span-2 flex items-center justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
-        ) : generatedData?.map((item, index) => (
+        ) : generatedData?.map((item: QuestionResponse, index: number) => (
           <Card
             key={index}
             className="shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col"

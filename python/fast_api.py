@@ -3,10 +3,12 @@ matplotlib.use('Agg')  # Set the backend before importing pyplot
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from typing import Any, List, Dict
 import os
 from dotenv import load_dotenv
 import logging
+import json
 
 # Load environment variables
 load_dotenv(override=True)
@@ -64,12 +66,57 @@ def is_base64_image(s: str) -> bool:
 async def get_chat(query: str):
     # Decode URL-encoded query string
     decoded_query = unquote(query)
-    # print("Decoded query:", decoded_query)
     
-    exec_result = run_graph(decoded_query)
-    print("Type of exec_result:", type(exec_result))
+    async def generate():
+        exec_result = run_graph(decoded_query)
+        
+        # Check if exec_result is a list of dictionaries with dataframe or graph keys
+        if isinstance(exec_result, list) and all(
+            isinstance(item, dict) and ('dataframe' in item or 'graph' in item)
+            for item in exec_result
+        ):
+            for item in exec_result:
+                processed_item = {}
+                if 'dataframe' in item and isinstance(item['dataframe'], pd.DataFrame):
+                    df_dict = item['dataframe'].to_dict('records')
+                    processed_item['dataframe'] = df_dict
+                elif 'graph' in item and isinstance(item['graph'], str) and is_base64_image(item['graph']):
+                    processed_item['graph'] = item['graph']
+                else:
+                    processed_item = item
+                # Convert to JSON string and yield
+                yield (json.dumps(processed_item) + "\n").encode('utf-8')
+        else:
+            yield (json.dumps({"success": False}) + "\n").encode('utf-8')
+
+    return StreamingResponse(
+        generate(),
+        media_type="application/x-ndjson",
+        headers={"Access-Control-Allow-Origin": "*"}
+    )
+
+@app.get("/column_names")
+def get_columns_names():
+    return get_columns_names_bg()
+
+@app.get("/df_questions") #, response_model=List[Dict[str, Any]]
+def df_questions(question: str = "", selectedParams: str = ""):
+    print("Query: ", question)
+    print("Params: ", selectedParams)
+    result =  get_df_questions(question, selectedParams)
+    print("Result: ", result)
+    return result
+
+if __name__ == "__main__":
+    import uvicorn
+    # Get environment from .env file
+    environment = os.getenv("ENVIRONMENT", "development")
     
-    # Check if exec_result is a list of dictionaries with dataframe or graph keys
+    if environment == "development":
+        uvicorn.run("fast_api:app", host="localhost", port=8000, reload=True)
+    else:
+        # For production
+        uvicorn.run("fast_api:app", host="0.0.0.0", port=8000, reload=False)
     if isinstance(exec_result, list) and all(
         isinstance(item, dict) and ('dataframe' in item or 'graph' in item)
         for item in exec_result
