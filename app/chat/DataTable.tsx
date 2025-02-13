@@ -22,7 +22,7 @@ export function DataTable({ tableData }: DataTableProps) {
     <Card className="h-full">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle>Data Table</CardTitle>
+          <CardTitle>Таблица</CardTitle>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" size="sm">
               {isOpen ? (

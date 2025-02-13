@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Any, List, Dict
 import os
 from dotenv import load_dotenv
+import logging
 
 # Load environment variables
 load_dotenv(override=True)
@@ -18,7 +19,10 @@ from urllib.parse import unquote
 import base64
 
 from data.dispatchers_data import create_data_prompt, load_dispatchers_data, get_columns_names_bg
-from data_questions import get_df_questions, get_image_description
+from data_questions import get_df_questions, get_image_analysis, get_df_analysis
+
+# Configure logging
+logging.getLogger('uvicorn.access').setLevel(logging.WARNING)
 
 app = FastAPI()
 origins = [
@@ -66,13 +70,14 @@ async def get_chat(query: str):
     print("Type of exec_result:", type(exec_result))
     
     if isinstance(exec_result, pd.DataFrame):
-        print(exec_result.info())
+        # print(exec_result.info())
         exec_result = exec_result.to_dict('records')
+        description = get_df_analysis(query=query, df_result=exec_result)
         return {"dataframe": exec_result}
 
     if isinstance(exec_result, str):
         if is_base64_image(exec_result):
-            description = get_image_description(query=query, image_b64=exec_result)
+            description = get_image_analysis(query=query, image_b64=exec_result)
             return {"image": exec_result}
         return {"text": exec_result}
 

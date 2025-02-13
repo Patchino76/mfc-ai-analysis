@@ -70,7 +70,7 @@ const ChatPage = () => {
       
       chatMutation.mutate(message, {
           onSuccess: (data: ChatResponse) => {
-              console.log("Response data:", data);
+              // console.log("Response data:", data);
               
               if (data?.dataframe) {
                   const tableMessage: TableMessage = {
@@ -179,8 +179,9 @@ const ChatPage = () => {
                   <Textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Type your message..."
+                    placeholder="Въведете вашият въпрос..."
                     className="flex-1"
+                    rows={3}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
