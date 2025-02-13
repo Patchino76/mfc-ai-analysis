@@ -83,23 +83,23 @@ def generate_python_function(state : AgentState):
     4. Add titles and labels using the plot object methods if needed (e.g. g.ax_joint.set_xlabel(...))
     """
     response = llm_gemini.generate_content(func_prompt)
-    print("1 - Generated Python Function Response:")
-    print(response.text)
+    # print("1 - Generated Python Function Response:")
+    # print(response.text)
     extracted_function = extract_function_code(response.text)
     state["generated_code"] = extracted_function
     return state # Return the updated state
 
 
 def extract_function_code(generated_code: str) -> str:
-    print("Original code:")
-    print(generated_code)
+    # print("Original code:")
+    # print(generated_code)
     
     # First try to extract code from markdown code blocks
     code_block_match = re.search(r"```python\n(.*?)```", generated_code, re.DOTALL)
     if code_block_match:
         generated_code = code_block_match.group(1).strip()
-        print("\nExtracted from code block:")
-        print(generated_code)
+        # print("\nExtracted from code block:")
+        # print(generated_code)
 
     # Extract the function definition by finding the first occurrence of 'def '
     index = generated_code.find('def ')
@@ -145,7 +145,7 @@ llm_tools = llm_groq.bind_tools(tools)
 def call_model(state:AgentState):
     messages = state["messages"]  # Ensure system message is included
     response = llm_tools.invoke(messages)
-    print("Agent Response:", response)
+    # print("Agent Response:", response)
     return {"messages": messages + [response]}
 
     return END
@@ -184,8 +184,3 @@ def run_graph(query: str):
     return exec_result
 
 
-# user_query = "Справка за престоите на поток 1 и поток 2 по категории. Do not plot anything."
-# Кои са причините за най-дълг престой на поток 1 и поток 2? Колко са те?
-# Начертай диаграма на разсейване с регресионна права на престоите по категории на поток 5 и 7.
-# result = run_graph(user_query)
-# print("final result: ", result)

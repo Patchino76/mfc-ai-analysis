@@ -1,8 +1,8 @@
-
 import pandas as pd
 import json
 import google.generativeai as genai
-# from data.synthetic_df import gen_synthetic_df
+from langchain_groq import ChatGroq
+from langchain_core.messages import  HumanMessage
 from data.dispatchers_data import create_data_prompt, load_dispatchers_data
 from dotenv import load_dotenv
 from rich import print
@@ -11,6 +11,7 @@ load_dotenv(override=True)
 # Configure the Gemini API
 genai.configure(api_key="AIzaSyD-S0ajn_qCyVolBLg0mQ83j0ENoqznMX0")
 llm_gemini = genai.GenerativeModel(model_name="gemini-2.0-flash-thinking-exp-01-21")
+llm_groq = ChatGroq(model="llama-3.2-90b-vision-preview", api_key = "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")
 
 def parse_llm_response(response):
   """
@@ -39,7 +40,9 @@ def parse_llm_response(response):
 
 def get_df_questions(query : str, params : str = ""):
     df_sample = create_data_prompt()
-    prompt = f"""You are an expert in data analysis and visualization. Your task is to generate 10 specific analytical prompts based on a given analysis type, a dataframe description, and optional parameters.
+    prompt = f"""You are an expert in data analysis and visualization. 
+        Your task is to generate 10 specific analytical prompts based on a given analysis type, 
+        a dataframe description, and optional parameters.
 
         **Analysis Type:**
         {query}
@@ -85,4 +88,33 @@ def get_df_questions(query : str, params : str = ""):
     print(response_json)
     return response_json
 
-get_df_questions(query="Анализ на общия производствен обем с течение на времето:  Изследване на тенденцията на общото произведено количество през времето, за да се види динамиката на производството.", params="Суха преработена руда, Подадена руда от МГТЛ за денонощието")
+# get_df_questions(query="Анализ на общия производствен обем с течение на времето:  Изследване на тенденцията на общото произведено количество през времето, за да се види динамиката на производството.", params="Суха преработена руда, Подадена руда от МГТЛ за денонощието")
+def get_image_description(query: str, image_b64: str):
+    df_structure = create_data_prompt()
+    prompt = f"""
+        Ти си експертен анализатор на данни и графики в минната и обогатителната индустрия.
+        Имаш задълбочено разбиране за процеси като средно и ситно трошене на медна руда, смилане с топкови мелници и флотация.
+        По-долу ти предоставям структурата на данните, която ще ти помогне да разкриеш контекста и спецификата на графиката:
+        {df_structure}
+        Графиката, която ще анализираш, е генерирана въз основа на следните въпроси:
+        {query}
+        Моля, дай анализ, като обръщаш специално внимание на значими тенденции, аномалии и критични показатели, които показват важната информация за процесите.
+        Твоят анализ трябва да бъде кратък, ясен и насочен към подпомагане на екипите по поддръжка, технологите и мениджърите в предприятието за оптимизиране на производството.
+        """
+    llm_prompt = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{image_b64}"
+                    }
+                }
+            ]
+        }
+    ]
+    response = llm_groq.invoke(llm_prompt)
+    print("Анализ на графиката:", response.content)
+    return response.content

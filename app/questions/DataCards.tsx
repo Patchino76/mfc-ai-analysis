@@ -334,10 +334,10 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
               <div className="text-2xl font-bold">{item.type === "dataframe" ? "Dataframe" : "Graph"}</div>
               <p className="text-xs text-muted-foreground mt-1">{item.question}</p>
               <CardDescription className="mt-2">
-                <strong>Expected Response:</strong> {item.response}
+                <strong>Резултат:</strong> {item.response}
               </CardDescription>
               <CardDescription className="mt-1">
-                <strong>Goal:</strong> {item.goal}
+                <strong>Цел:</strong> {item.goal}
               </CardDescription>
             </CardContent>
             <CardFooter className="flex justify-end pt-2">

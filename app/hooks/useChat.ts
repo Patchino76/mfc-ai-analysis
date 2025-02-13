@@ -26,7 +26,7 @@ export interface QuestionResponse {
 
 
 export function useChat() {
-    console.log("apiBaseUrl:", apiBaseUrl)
+    // console.log("apiBaseUrl:", apiBaseUrl)
   return useMutation<ChatResponse, Error, string>({
     
       mutationFn: async (query: string) => {

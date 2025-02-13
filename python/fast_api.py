@@ -18,7 +18,7 @@ from urllib.parse import unquote
 import base64
 
 from data.dispatchers_data import create_data_prompt, load_dispatchers_data, get_columns_names_bg
-from data_questions import get_df_questions
+from data_questions import get_df_questions, get_image_description
 
 app = FastAPI()
 origins = [
@@ -60,7 +60,7 @@ def is_base64_image(s: str) -> bool:
 async def get_chat(query: str):
     # Decode URL-encoded query string
     decoded_query = unquote(query)
-    print("Decoded query:", decoded_query)
+    # print("Decoded query:", decoded_query)
     
     exec_result = run_graph(decoded_query)
     print("Type of exec_result:", type(exec_result))
@@ -72,6 +72,7 @@ async def get_chat(query: str):
 
     if isinstance(exec_result, str):
         if is_base64_image(exec_result):
+            description = get_image_description(query=query, image_b64=exec_result)
             return {"image": exec_result}
         return {"text": exec_result}
 
