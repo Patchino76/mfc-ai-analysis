@@ -7,7 +7,7 @@ import { Send, Copy } from "lucide-react";
 import { DataTable } from "./DataTable";
 import { useChatStore } from "../store/chatStore";
 import { useChat, ChatResponse } from "../hooks/useChat";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from 'next/image';
 
 import { useSearchParams } from 'next/navigation';
@@ -41,6 +41,7 @@ export type ChatMessage = TextMessage | TableMessage | ImageMessage;
 const ChatPage = () => {
   const searchParams = useSearchParams();
   const question = searchParams.get("question");
+  const [curMessageIndex, setCurMessageIndex] = useState(0);
 
   const { 
     currentMessage, 
@@ -48,19 +49,14 @@ const ChatPage = () => {
     chatHistory, 
     addMessage,
     useMatplotlib,
-    togglePlottingPreference,
+    setUseMatplotlib,
     clearChat
   } = useChatStore();
-  const chatMutation = useChat();
+  const chatMutation = useChat(useMatplotlib);
   
   useEffect(() => {
     if (question) {
-      try {
-        const decodedQuestion = decodeURIComponent(question);
-        setCurrentMessage(decodedQuestion);
-      } catch (error) {
-        console.error('Error decoding question parameter:', error);
-      }
+      setCurrentMessage(question);
     }
   }, [question, setCurrentMessage]);
 
@@ -72,9 +68,7 @@ const ChatPage = () => {
       // Add user message to chat history
       const userMessage: TextMessage = {
           type: "text",
-          text: currentMessage + (useMatplotlib ? 
-              " Use matplotlib if you need to plot." : 
-              " Use seaborn library if you need to plot."),
+          text: currentMessage,
           sender: "user"
       };
       addMessage(userMessage);
@@ -122,6 +116,8 @@ const ChatPage = () => {
               }
               
               setCurrentMessage("");
+              setCurMessageIndex(curMessageIndex + 1);
+              console.log("curMessageIndex:", curMessageIndex);
           },
           onError: (error) => {
               console.error("Chat error:", error);
@@ -214,7 +210,7 @@ const ChatPage = () => {
                     <div className="flex items-center space-x-2">
                       <Switch
                         checked={useMatplotlib}
-                        onCheckedChange={togglePlottingPreference}
+                        onCheckedChange={setUseMatplotlib}
                       />
                       <span className="text-sm">
                         {useMatplotlib ? 'plt' : 'sns'}

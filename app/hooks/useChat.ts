@@ -25,14 +25,17 @@ export interface QuestionResponse {
 }
 
 
-export function useChat() {
+export function useChat(useMatplotlib: boolean = false) {
     // console.log("apiBaseUrl:", apiBaseUrl)
   return useMutation<ChatResponse, Error, string>({
     
       mutationFn: async (query: string) => {
-          const response = await axios.get<ChatResponse>(`${apiBaseUrl}/chat`, 
-              { params: { query } });
-          return response.data;
+        const fullQuery = query + (useMatplotlib ? 
+          " Use matplotlib if you need to plot." : 
+          " Use seaborn library if you need to plot.");
+        const response = await axios.get<ChatResponse>(`${apiBaseUrl}/chat`, 
+          { params: { query: fullQuery } });
+        return response.data;
       }
   });
 }

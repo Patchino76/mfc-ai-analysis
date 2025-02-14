@@ -11,6 +11,7 @@ interface ChatState {
     addMessage: (message: ChatMessage) => void
     clearChat: () => void
     togglePlottingPreference: () => void
+    setUseMatplotlib: (value: boolean) => void
 }
 
 export const useChatStore = create<ChatState>()(
@@ -27,7 +28,8 @@ export const useChatStore = create<ChatState>()(
                 })),
             clearChat: () => set({ chatHistory: [], currentMessage: "" }),
             togglePlottingPreference: () => 
-                set((state) => ({ useMatplotlib: !state.useMatplotlib }))
+                set((state) => ({ useMatplotlib: !state.useMatplotlib })),
+            setUseMatplotlib: (value) => set({ useMatplotlib: value })
         }),
         {
             name: 'chat-storage',
