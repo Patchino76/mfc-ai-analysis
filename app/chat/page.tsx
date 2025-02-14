@@ -10,7 +10,7 @@ import { useChat, ChatResponse } from "../hooks/useChat";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 
 type MessageSender = "user" | "system";
@@ -40,6 +40,7 @@ export type ChatMessage = TextMessage | TableMessage | ImageMessage;
 
 const ChatPage = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const question = searchParams.get("question");
   const [curMessageIndex, setCurMessageIndex] = useState(0);
 
@@ -82,13 +83,7 @@ const ChatPage = () => {
                       data: data.dataframe,
                       sender: "system"
                   };
-                  const statusMessage: TextMessage = {
-                      type: "text",
-                      text: "Data table has been updated",
-                      sender: "system"
-                  };
                   addMessage(tableMessage);
-                  addMessage(statusMessage);
               } else if (data?.graph) {
                   console.log("Received graph data:", {
                       hasData: !!data.graph,
@@ -117,7 +112,7 @@ const ChatPage = () => {
               
               setCurrentMessage("");
               setCurMessageIndex(curMessageIndex + 1);
-              console.log("curMessageIndex:", curMessageIndex);
+              // console.log("curMessageIndex:", curMessageIndex);
           },
           onError: (error) => {
               console.error("Chat error:", error);
@@ -140,7 +135,10 @@ const ChatPage = () => {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => clearChat()}
+              onClick={() => {
+                clearChat();
+                router.push('/chat');
+              }}
             >
               Reset
             </Button>
