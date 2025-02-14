@@ -5,6 +5,7 @@ import { ScrollArea} from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { Send, Copy } from "lucide-react";
 import { DataTable } from "./DataTable";
+import { CollapsibleImage } from "./CollapsibleImage";
 import { useChatStore } from "../store/chatStore";
 import { useChat, ChatResponse } from "../hooks/useChat";
 import { useEffect, useState } from "react";
@@ -143,16 +144,27 @@ const ChatPage = () => {
 
           <div className="flex items-center justify-between px-4 py-2 border-b">
             <h1 className="text-md font-normal">История</h1>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => {
-                clearChat();
-                router.push('/chat');
-              }}
-            >
-              Reset
-            </Button>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm">
+                  {useMatplotlib ? 'matplotlib' : 'seaborn'}
+                </span>
+                <Switch
+                  checked={useMatplotlib}
+                  onCheckedChange={setUseMatplotlib}
+                />
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  clearChat();
+                  router.push('/chat');
+                }}
+              >
+                Reset
+              </Button>
+            </div>
           </div>
 
             <div className="flex flex-col h-full">
@@ -182,15 +194,7 @@ const ChatPage = () => {
                         </div>
                       ) : (
                         <div className="w-full p-4 bg-muted rounded-lg">
-                          <div className="relative w-full h-[800px]">
-                            <Image
-                              src={`data:image/png;base64,${msg.base64Data}`}
-                              alt="Generated visualization"
-                              className="object-contain"
-                              fill
-                              sizes="(max-width: 768px) 100vw, 80vw"
-                            />
-                          </div>
+                          <CollapsibleImage base64Data={msg.base64Data} />
                         </div>
                       )}
                     </div>
@@ -216,15 +220,6 @@ const ChatPage = () => {
                     <Button type="submit">
                       <Send className="h-4 w-4" />
                     </Button>
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        checked={useMatplotlib}
-                        onCheckedChange={setUseMatplotlib}
-                      />
-                      <span className="text-sm">
-                        {useMatplotlib ? 'plt' : 'sns'}
-                      </span>
-                    </div>
                   </div>
                 </form>
               </div>

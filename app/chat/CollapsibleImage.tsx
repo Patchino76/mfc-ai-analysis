@@ -1,31 +1,29 @@
 "use client";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { useState } from "react";
-import { DataRow } from "./page";
+import Image from 'next/image';
 
-interface DataTableProps {
-  tableData: DataRow[];
+interface CollapsibleImageProps {
+  base64Data: string;
 }
 
-export function DataTable({ tableData }: DataTableProps) {
+export function CollapsibleImage({ base64Data }: CollapsibleImageProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const headers = Object.keys(tableData[0] || {});
 
   const handleExplain = () => {
     // TODO: Implement the explain endpoint call
-    console.log("Explain button clicked for table data");
+    console.log("Explain button clicked for image");
   };
 
   return (
     <Card className="h-full">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle>Таблица</CardTitle>
+          <CardTitle>График</CardTitle>
           <div className="flex items-center space-x-2">
             <Button 
               variant="ghost" 
@@ -48,26 +46,14 @@ export function DataTable({ tableData }: DataTableProps) {
         </CardHeader>
         <CollapsibleContent>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {headers.map((header) => (
-                    <TableHead key={header}>{header}</TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {tableData.map((row, rowIndex) => (
-                  <TableRow key={rowIndex}>
-                    {headers.map((header) => (
-                      <TableCell key={`${rowIndex}-${header}`}>
-                        {(row[header]?.toString() || '-')}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="relative w-full h-[800px]">
+              <Image
+                src={`data:image/png;base64,${base64Data}`}
+                alt="Generated graph"
+                fill
+                style={{ objectFit: "contain" }}
+              />
+            </div>
           </CardContent>
         </CollapsibleContent>
       </Collapsible>
