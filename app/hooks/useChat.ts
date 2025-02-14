@@ -43,6 +43,34 @@ export function useChat(useMatplotlib: boolean = false) {
   });
 }
 
+export function useExplanations() {
+    return useQuery<string>({
+        queryKey: ['explanations'],
+        enabled: true,
+        queryFn: async () => {
+            const response = await axios.get<string>(`${apiBaseUrl}/explanations`,
+            );
+            return response.data;
+        }
+    });
+}
+export function useExplanations_old(query: string, data: string, type: "dataframe" | "graph") {
+    return useQuery<string>({
+        queryKey: ['explanations', query, data, type],
+        enabled: Boolean(query && data),
+        queryFn: async () => {
+            console.log("query:", query)
+            console.log("data:", data)
+            console.log("type:", type)
+            const response = await axios.get<string>(`${apiBaseUrl}/explanations`,
+                { params: { query, data, type } }
+            );
+            return response.data;
+        }
+    });
+}
+
+
 export function useRawTable() {
     return useQuery<DataRow[]>({
         queryKey: ['dispatchers'],

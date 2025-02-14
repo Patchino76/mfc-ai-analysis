@@ -10,15 +10,15 @@ import { DataRow } from "./page";
 
 interface DataTableProps {
   tableData: DataRow[];
+  onExplain: () => void;
 }
 
-export function DataTable({ tableData }: DataTableProps) {
+export function DataTable({ tableData, onExplain }: DataTableProps) {
   const [isOpen, setIsOpen] = useState(false);
   const headers = Object.keys(tableData[0] || {});
 
   const handleExplain = () => {
-    // TODO: Implement the explain endpoint call
-    console.log("Explain button clicked for table data");
+    onExplain();
   };
 
   return (

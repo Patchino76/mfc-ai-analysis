@@ -12,7 +12,10 @@ import { useEffect, useState } from "react";
 import Image from 'next/image';
 
 import { useSearchParams, useRouter } from 'next/navigation';
+import axios from 'axios';
+import { useExplanations } from '../hooks/useExplanations';
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 type MessageSender = "user" | "system";
 export type DataRow = Record<string, string | number>;
@@ -55,7 +58,21 @@ const ChatPage = () => {
     clearChat
   } = useChatStore();
   const chatMutation = useChat(useMatplotlib);
-  
+  const explanationQuery = useExplanations();
+
+  const handleExplain = () => {
+    explanationQuery.refetch().then((result: { data: { text: string } | null }) => {
+      if (result.data?.text) {
+        const explanationMessage: TextMessage = {
+          type: "text",
+          text: result.data.text,
+          sender: "system"
+        };
+        addMessage(explanationMessage);
+      }
+    });
+  };
+
   useEffect(() => {
     if (question) {
       setCurrentMessage(question);
@@ -190,11 +207,17 @@ const ChatPage = () => {
                         </div>
                       ) : msg.type === "dataframe" ? (
                         <div className="w-full p-4 bg-muted rounded-lg">
-                          <DataTable tableData={msg.data} />
+                          <DataTable 
+                            tableData={msg.data} 
+                            onExplain={(data) => handleExplain()} 
+                          />
                         </div>
                       ) : (
                         <div className="w-full p-4 bg-muted rounded-lg">
-                          <CollapsibleImage base64Data={msg.base64Data} />
+                          <CollapsibleImage 
+                            base64Data={msg.base64Data} 
+                            onExplain={(data) => handleExplain()} 
+                          />
                         </div>
                       )}
                     </div>

@@ -9,21 +9,21 @@ import Image from 'next/image';
 
 interface CollapsibleImageProps {
   base64Data: string;
+  onExplain: () => void;
 }
 
-export function CollapsibleImage({ base64Data }: CollapsibleImageProps) {
+export function CollapsibleImage({ base64Data, onExplain }: CollapsibleImageProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleExplain = () => {
-    // TODO: Implement the explain endpoint call
-    console.log("Explain button clicked for image");
+    onExplain();
   };
 
   return (
     <Card className="h-full">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle>График</CardTitle>
+          <CardTitle>Графика</CardTitle>
           <div className="flex items-center space-x-2">
             <Button 
               variant="ghost" 
