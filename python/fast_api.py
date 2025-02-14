@@ -19,7 +19,7 @@ from urllib.parse import unquote
 import base64
 
 from data.dispatchers_data import create_data_prompt, load_dispatchers_data, get_columns_names_bg
-from data_questions import get_df_questions, get_image_analysis, get_df_analysis
+from data_questions import get_df_questions, get_image_analysis, get_df_analysis, get_combined_analysis
 
 # Configure logging
 logging.getLogger('uvicorn.access').setLevel(logging.WARNING)
@@ -39,6 +39,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add global variables
+current_query = None
+current_processed_results = None
 
 @app.get("/dispatchers", response_model=List[Dict[str, Any]])
 def get_dispatchers_df():
@@ -62,6 +66,7 @@ def is_base64_image(s: str) -> bool:
 
 @app.get("/chat")
 async def get_chat(query: str, message_index: int = 0):
+    global current_query, current_processed_results
     # Decode URL-encoded query string
     decoded_query = unquote(query)
     
@@ -85,6 +90,10 @@ async def get_chat(query: str, message_index: int = 0):
                 processed_item = item
             processed_results.append(processed_item)
         
+        # Store in global variables
+        current_query = decoded_query
+        current_processed_results = processed_results
+        
         # Return next message if available, otherwise return empty response
         if message_index < len(processed_results):
             return {
@@ -101,10 +110,11 @@ async def get_chat(query: str, message_index: int = 0):
 
 @app.get("/explanations")
 def get_explanations():
-    print("explanations called")
-    return {"explanation": "explanation recieved"}
-
-
+    if current_query is None or current_processed_results is None:
+        return {"explanation": "No analysis results found"}
+        
+    explanation = get_combined_analysis(current_query, current_processed_results)
+    return {"explanation": explanation}
 
 @app.get("/column_names")
 def get_columns_names():

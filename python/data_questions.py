@@ -124,3 +124,80 @@ def get_df_analysis(query: str, df_result: str):
     response = llm_gemini.generate_content(prompt)
     print("Анализ на таблицата:", response.text)
     return response.text
+
+def get_combined_analysis(current_query: str, current_processed_results: list):
+    df_structure = create_data_prompt()
+    
+    # Initialize prompt content
+    prompt = f"""
+        Ти си експертен анализатор на данни и графики в минната и обогатителната индустрия.
+        Имаш задълбочено разбиране за процеси като средно и ситно трошене на медна руда, смилане с топкови мелници и флотация.
+        
+        По-долу ти предоставям структурата на данните, която ще ти помогне да разкриеш контекста и спецификата на анализа:
+        {df_structure}
+        
+        Анализът е генериран въз основа на следния въпрос:
+        {current_query}
+        
+        Ще ти предоставя няколко елемента за анализ:
+    """
+    
+    # Track what types of data we have for better prompt construction
+    has_dataframes = False
+    has_graphs = False
+    
+    # Process each result
+    for idx, result in enumerate(current_processed_results):
+        if "dataframe" in result:
+            has_dataframes = True
+            df_data = result["dataframe"]
+            prompt += f"\n\nТаблица {idx + 1}:"
+            # Convert dataframe to string representation for the prompt
+            df_str = "\n".join([f"- " + ", ".join([f"{k}: {v}" for k, v in row.items()]) for row in df_data[:5]])
+            prompt += f"\n{df_str}"
+            if len(df_data) > 5:
+                prompt += "\n(показани са първите 5 реда от данните)"
+                
+        elif "graph" in result and result["graph"]:
+            has_graphs = True
+            prompt += f"\n\nГрафика {idx + 1}: Визуализация на данните"
+    
+    # Add final analysis instructions based on what we have
+    prompt += "\n\nМоля, направи задълбочен анализ, като:"
+    if has_dataframes and has_graphs:
+        prompt += """
+        - Обедини информацията от таблиците и графиките в общ анализ
+        - Открий връзките между числовите данни и визуалните тенденции
+        - Посочи важни зависимости, които се виждат едновременно в данните и графиките"""
+    elif has_dataframes:
+        prompt += """
+        - Анализирай числовите стойности и тенденции в данните
+        - Открий важни зависимости между различните показатели
+        - Посочи критични стойности или аномалии"""
+    elif has_graphs:
+        prompt += """
+        - Анализирай визуалните тенденции в графиките
+        - Открий важни моменти и промени в показателите
+        - Посочи критични точки или аномалии"""
+    
+    prompt += """
+        
+        Твоят анализ трябва да бъде кратък, ясен и насочен към подпомагане на екипите по поддръжка, технологите и мениджърите в предприятието за оптимизиране на производството.
+        """
+    
+    # Prepare content parts for Gemini
+    content_parts = [{"text": prompt}]
+    
+    # Add images if we have graphs
+    for result in current_processed_results:
+        if "graph" in result and result["graph"]:
+            content_parts.append({
+                "inline_data": {
+                    "mime_type": "image/jpeg",
+                    "data": result["graph"]
+                }
+            })
+    
+    # Generate content with Gemini
+    response = llm_gemini.generate_content(content_parts)
+    return response.text
