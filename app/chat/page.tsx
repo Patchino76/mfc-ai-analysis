@@ -3,17 +3,17 @@ import { Textarea } from "@/components/ui/textarea"; // Add Textarea import
 import { Button } from "@/components/ui/button";
 import { ScrollArea} from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
-import { Send, Copy } from "lucide-react";
+import { Send, Copy, User } from "lucide-react";
 import { DataTable } from "./DataTable";
 import { CollapsibleImage } from "./CollapsibleImage";
+import { CollapsibleText } from "./CollapsibleText";
 import { useChatStore } from "../store/chatStore";
-import { useChat, ChatResponse } from "../hooks/useChat";
+import { useChat, ChatResponse, useExplanations } from "../hooks/useChat";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import axios from 'axios';
-import { useExplanations } from '../hooks/useExplanations';
+
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -61,11 +61,11 @@ const ChatPage = () => {
   const explanationQuery = useExplanations();
 
   const handleExplain = () => {
-    explanationQuery.refetch().then((result: { data: { text: string } | null }) => {
-      if (result.data?.text) {
+    explanationQuery.refetch().then((result) => {
+      if (result.data?.explanation) {
         const explanationMessage: TextMessage = {
           type: "text",
-          text: result.data.text,
+          text: result.data.explanation,
           sender: "system"
         };
         addMessage(explanationMessage);
@@ -190,33 +190,38 @@ const ChatPage = () => {
                   {chatHistory.map((msg, index) => (
                     <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
                       {msg.type === "text" ? (
-                        <div className="inline-flex items-center gap-2">
-                          <div className={`inline-block p-2 rounded-lg ${
-                            msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                          }`}>
-                            {msg.text}
+                        msg.sender === "user" ? (
+                          <div className="inline-flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => navigator.clipboard.writeText(msg.text)}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                            <div className="inline-flex items-center gap-2 p-2 rounded-lg bg-primary text-primary-foreground">
+                              <User className="h-4 w-4" />
+                              <span>{msg.text}</span>
+                            </div>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => navigator.clipboard.writeText(msg.text)}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        ) : (
+                          <div className="w-full p-4 bg-muted rounded-lg">
+                            <CollapsibleText text={msg.text} />
+                          </div>
+                        )
                       ) : msg.type === "dataframe" ? (
                         <div className="w-full p-4 bg-muted rounded-lg">
                           <DataTable 
                             tableData={msg.data} 
-                            onExplain={(data) => handleExplain()} 
+                            onExplain={() => handleExplain()} 
                           />
                         </div>
                       ) : (
                         <div className="w-full p-4 bg-muted rounded-lg">
                           <CollapsibleImage 
                             base64Data={msg.base64Data} 
-                            onExplain={(data) => handleExplain()} 
+                            onExplain={() => handleExplain()} 
                           />
                         </div>
                       )}

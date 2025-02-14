@@ -100,19 +100,9 @@ async def get_chat(query: str, message_index: int = 0):
     return False
 
 @app.get("/explanations")
-def get_explanations(query: str, data:str, type: Literal["dataframe", "graph"]):
-    print("query:", query)
-    print("data:", data)
-    print("type:", type)
-    if type == "dataframe":
-        explanation = get_df_analysis(query=query, df_result=data)
-    elif type == "graph":
-        explanation = get_image_analysis(query=query, image_b64=data)
-    else:
-        explanation = "Invalid type"
-
-    explanation = {"text": explanation}
-    return explanation
+def get_explanations():
+    print("explanations called")
+    return {"explanation": "explanation recieved"}
 
 
 

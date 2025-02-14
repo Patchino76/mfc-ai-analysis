@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
+import { ChevronDown, ChevronUp, HelpCircle, LineChart, Info } from "lucide-react";
 import { useState } from "react";
 import Image from 'next/image';
 
@@ -23,15 +23,17 @@ export function CollapsibleImage({ base64Data, onExplain }: CollapsibleImageProp
     <Card className="h-full">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle>Графика</CardTitle>
+          <div className="flex items-center space-x-2">
+            <LineChart className="h-5 w-5 text-primary" />
+            <CardTitle>Графика</CardTitle>
+          </div>
           <div className="flex items-center space-x-2">
             <Button 
               variant="ghost" 
               size="icon"
               onClick={handleExplain}
-              className="h-8 w-8"
             >
-              <HelpCircle className="h-4 w-4" />
+              <Info className="h-4 w-4" />
             </Button>
             <CollapsibleTrigger asChild>
               <Button variant="ghost" size="sm">

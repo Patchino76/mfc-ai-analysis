@@ -44,11 +44,11 @@ export function useChat(useMatplotlib: boolean = false) {
 }
 
 export function useExplanations() {
-    return useQuery<string>({
+    return useQuery<{"explanation" : string}>({
         queryKey: ['explanations'],
         enabled: true,
         queryFn: async () => {
-            const response = await axios.get<string>(`${apiBaseUrl}/explanations`,
+            const response = await axios.get<{"explanation" : string}>(`${apiBaseUrl}/explanations`,
             );
             return response.data;
         }
