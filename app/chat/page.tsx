@@ -74,56 +74,67 @@ const ChatPage = () => {
       };
       addMessage(userMessage);
       
-      chatMutation.mutate(currentMessage, {
-          onSuccess: (data: ChatResponse) => {
-            console.log("Received chat response:", data);
-              if (data?.dataframe) {
-                  const tableMessage: TableMessage = {
-                      type: "dataframe",
-                      data: data.dataframe,
-                      sender: "system"
-                  };
-                  addMessage(tableMessage);
-              } else if (data?.graph) {
-                  console.log("Received graph data:", {
-                      hasData: !!data.graph,
-                      dataLength: data.graph?.length,
-                      firstChars: data.graph?.substring(0, 50)
-                  });
-                  const imageMessage: ImageMessage = {
-                      type: "graph",
-                      base64Data: data.graph,
-                      sender: "system"
-                  };
-                  console.log("Created image message:", {
-                      type: imageMessage.type,
-                      hasBase64: !!imageMessage.base64Data,
-                      base64Length: imageMessage.base64Data?.length
-                  });
-                  addMessage(imageMessage);
-              } else if (data?.text) {
-                  const textMessage: TextMessage = {
-                      type: "text",
-                      text: data.text,
-                      sender: "system"
-                  };
-                  addMessage(textMessage);
+      // Function to fetch next message
+      const fetchNextMessage = (messageIndex: number) => {
+          chatMutation.mutate(
+              { query: currentMessage, messageIndex },
+              {
+                  onSuccess: (response: ChatResponse) => {
+                      if (!response.data) return;
+                      
+                      const data = response.data;
+                      console.log("Received chat response:", data);
+                      
+                      if (data?.dataframe) {
+                          const tableMessage: TableMessage = {
+                              type: "dataframe",
+                              data: data.dataframe,
+                              sender: "system"
+                          };
+                          addMessage(tableMessage);
+                      } else if (data?.graph) {
+                          console.log("Received graph data:", {
+                              hasData: !!data.graph,
+                              dataLength: data.graph?.length,
+                              firstChars: data.graph?.substring(0, 50)
+                          });
+                          const imageMessage: ImageMessage = {
+                              type: "graph",
+                              base64Data: data.graph,
+                              sender: "system"
+                          };
+                          addMessage(imageMessage);
+                      } else if (data?.text) {
+                          const textMessage: TextMessage = {
+                              type: "text",
+                              text: data.text,
+                              sender: "system"
+                          };
+                          addMessage(textMessage);
+                      }
+                      
+                      setCurrentMessage("");
+                      
+                      // If there are more messages, fetch the next one
+                      if (response.hasMore) {
+                          fetchNextMessage(messageIndex + 1);
+                      }
+                  },
+                  onError: (error) => {
+                      console.error("Chat error:", error);
+                      const errorMessage: TextMessage = {
+                          type: "text",
+                          text: "Error processing your request",
+                          sender: "system"
+                      };
+                      addMessage(errorMessage);
+                  }
               }
-              
-              setCurrentMessage("");
-              setCurMessageIndex(curMessageIndex + 1);
-              // console.log("curMessageIndex:", curMessageIndex);
-          },
-          onError: (error) => {
-              console.error("Chat error:", error);
-              const errorMessage: TextMessage = {
-                  type: "text",
-                  text: "Error processing your request",
-                  sender: "system"
-              };
-              addMessage(errorMessage);
-          }
-      });
+          );
+      };
+      
+      // Start fetching messages from index 0
+      fetchNextMessage(0);
   };
 
   return (

@@ -4,9 +4,12 @@ import { apiBaseUrl } from "../config";
 import { DataRow } from "../chat/page";
 
 export interface ChatResponse {
-    dataframe?: DataRow[];
-    text?: string;
-    graph?: string;
+    data?: {
+        dataframe?: DataRow[];
+        text?: string;
+        graph?: string;
+    };
+    hasMore: boolean;
 }
 
 export interface QuestionItem {
@@ -27,14 +30,14 @@ export interface QuestionResponse {
 
 export function useChat(useMatplotlib: boolean = false) {
     // console.log("apiBaseUrl:", apiBaseUrl)
-  return useMutation<ChatResponse, Error, string>({
+  return useMutation<ChatResponse, Error, { query: string; messageIndex: number }>({
     
-      mutationFn: async (query: string) => {
+      mutationFn: async ({ query, messageIndex }) => {
         const fullQuery = query + (useMatplotlib ? 
           " Use matplotlib if you need to plot." : 
           " Use seaborn library if you need to plot.");
         const response = await axios.get<ChatResponse>(`${apiBaseUrl}/chat`, 
-          { params: { query: fullQuery } });
+          { params: { query: fullQuery, message_index: messageIndex } });
         return response.data;
       }
   });
