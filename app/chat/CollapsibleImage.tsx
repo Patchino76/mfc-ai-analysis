@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp, HelpCircle, LineChart, Info } from "lucide-react";
+import { ChevronDown, ChevronUp, LineChart, Info } from "lucide-react";
 import { useState } from "react";
 import Image from 'next/image';
 

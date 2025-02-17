@@ -38,7 +38,7 @@ export default function QuestionsPage() {
   return (
     <main className="min-h-screen bg-background">
       <div className="container mx-auto py-10 px-4 max-w-7xl">
-        <h1 className="text-4xl font-bold mb-10 text-center">Data Visualization Questions</h1>
+        <h1 className="text-2xl font-medium mb-10 text-center">Примерни въпроси за анализ</h1>
         {params &&  <DataCards  parameters={params} exampleQuestions={exampleQuestions} />}
       </div>
     </main>

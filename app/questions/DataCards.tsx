@@ -349,7 +349,7 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
         ))}
         {!generatedData && !isLoading && (
           <div className="col-span-2 text-center py-8 text-muted-foreground">
-            Все още няма генерирани въпроси. Изберете предефинирана тема, параметри и натиснете бутона "Генерирай".
+            Все още няма генерирани въпроси. Изберете предефинирана тема, параметри и натиснете бутона Генерирай.
           </div>
         )}
       </div>

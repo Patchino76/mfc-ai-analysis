@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import ReactMarkdown from "react-markdown";
 
 interface CollapsibleTextProps {
@@ -40,14 +40,14 @@ export function CollapsibleText({ text, title = "Обяснение" }: Collapsi
             <div className="text-sm">
               <ReactMarkdown
                 components={{
-                  h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mb-4 text-primary" {...props} />,
-                  h2: ({ node, ...props }) => <h2 className="text-2xl font-semibold mt-6 mb-3 text-secondary" {...props} />,
-                  h3: ({ node, ...props }) => <h3 className="text-xl font-medium mt-4 mb-2 text-accent" {...props} />,
-                  p: ({ node, ...props }) => <p className="mb-4 text-foreground" {...props} />,
-                  ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4" {...props} />,
-                  li: ({ node, ...props }) => <li className="mb-2" {...props} />,
-                  strong: ({ node, ...props }) => <strong className="font-bold text-primary" {...props} />,
-                  em: ({ node, ...props }) => <em className="italic text-secondary" {...props} />,
+                  h1: ({ ...props }) => <h1 className="text-3xl font-bold mb-4 text-primary" {...props} />,
+                  h2: ({ ...props }) => <h2 className="text-2xl font-semibold mt-6 mb-3 text-secondary" {...props} />,
+                  h3: ({ ...props }) => <h3 className="text-xl font-medium mt-4 mb-2 text-accent" {...props} />,
+                  p: ({ ...props }) => <p className="mb-4 text-foreground" {...props} />,
+                  ul: ({ ...props }) => <ul className="list-disc list-inside mb-4" {...props} />,
+                  li: ({ ...props }) => <li className="mb-2" {...props} />,
+                  strong: ({ ...props }) => <strong className="font-bold text-primary" {...props} />,
+                  em: ({ ...props }) => <em className="italic text-secondary" {...props} />,
                 }}
               >
                 {text}

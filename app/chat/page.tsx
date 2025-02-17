@@ -9,13 +9,11 @@ import { CollapsibleImage } from "./CollapsibleImage";
 import { CollapsibleText } from "./CollapsibleText";
 import { useChatStore } from "../store/chatStore";
 import { useChat, ChatResponse, useExplanations } from "../hooks/useChat";
-import { useEffect, useState } from "react";
-import Image from 'next/image';
-
+import { useEffect } from "react";
 import { useSearchParams, useRouter } from 'next/navigation';
+import { Suspense } from "react";
 
-
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+// const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 type MessageSender = "user" | "system";
 export type DataRow = Record<string, string | number>;
@@ -42,11 +40,11 @@ export interface ImageMessage extends BaseMessage {
 
 export type ChatMessage = TextMessage | TableMessage | ImageMessage;
 
-const ChatPage = () => {
+const ChatPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const question = searchParams.get("question");
-  const [curMessageIndex, setCurMessageIndex] = useState(0);
+  // const [curMessageIndex, setCurMessageIndex] = useState(0);
 
   const { 
     currentMessage, 
@@ -258,4 +256,12 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage
+const ChatPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ChatPageContent />
+    </Suspense>
+  );
+};
+
+export default ChatPage;

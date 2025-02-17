@@ -2,7 +2,7 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Thermometer, Gauge, Droplets, Wind } from "lucide-react";
+import { Cog, Droplets, Box, Gauge } from "lucide-react";
 import { DataRow } from "../chat/page";
 
 export function DataTableRaw({ tableData }: { tableData: DataRow[] }) {
@@ -14,38 +14,38 @@ export function DataTableRaw({ tableData }: { tableData: DataRow[] }) {
       <div className="grid grid-cols-4 gap-4">
         <Card className="p-4 flex items-center space-x-4">
           <div className="bg-blue-100 p-3 rounded-lg">
-            <Thermometer className="h-6 w-6 text-blue-700" />
+            <Cog className="h-6 w-6 text-blue-700" />
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Temperature</p>
-            <p className="text-2xl font-bold">23.5°C</p>
+            <p className="text-sm text-muted-foreground">Преработка</p>
+            <p className="text-2xl font-bold">t</p>
           </div>
         </Card>
         <Card className="p-4 flex items-center space-x-4">
           <div className="bg-green-100 p-3 rounded-lg">
-            <Gauge className="h-6 w-6 text-green-700" />
+            <Droplets className="h-6 w-6 text-green-700" />
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Pressure</p>
-            <p className="text-2xl font-bold">1013 hPa</p>
+            <p className="text-sm text-muted-foreground">Влага</p>
+            <p className="text-2xl font-bold">%</p>
           </div>
         </Card>
         <Card className="p-4 flex items-center space-x-4">
           <div className="bg-purple-100 p-3 rounded-lg">
-            <Droplets className="h-6 w-6 text-purple-700" />
+            <Box className="h-6 w-6 text-purple-700" />
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Humidity</p>
-            <p className="text-2xl font-bold">45%</p>
+            <p className="text-sm text-muted-foreground">Плътност</p>
+            <p className="text-2xl font-bold">%</p>
           </div>
         </Card>
         <Card className="p-4 flex items-center space-x-4">
           <div className="bg-orange-100 p-3 rounded-lg">
-            <Wind className="h-6 w-6 text-orange-700" />
+            <Gauge className="h-6 w-6 text-orange-700" />
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Wind Speed</p>
-            <p className="text-2xl font-bold">12 km/h</p>
+            <p className="text-sm text-muted-foreground">Зърнометрия</p>
+            <p className="text-2xl font-bold">mk</p>
           </div>
         </Card>
       </div>

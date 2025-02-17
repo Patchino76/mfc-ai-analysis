@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { ChatMessage, DataRow } from '../chat/page'
+import { ChatMessage } from '../chat/page'
 
 interface ChatState {
     chatHistory: ChatMessage[]
