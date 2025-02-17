@@ -20,5 +20,5 @@ def load_dispatchers(file_name) -> pd.DataFrame:
     
     return df
 
-# df = load_dispatchers('dispatchers_en_22.csv')
-# print(df.head())
+df = load_dispatchers('dispatchers_en_22.csv')
+print(df.head())

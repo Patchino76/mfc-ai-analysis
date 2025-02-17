@@ -106,8 +106,8 @@ def create_data_prompt():
     )
     return prompt
 # %%
-# prompt = create_data_prompt()
-# print(prompt)
+prompt = create_data_prompt()
+print(prompt)
 # %%
 def get_columns_names_bg():
     bg_names = [col for col in column_descriptions.values()]
