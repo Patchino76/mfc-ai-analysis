@@ -59,6 +59,7 @@ def generate_python_function(state : AgentState):
     Return only the Python function as a string and do not try to execute the code.
     Do not add sample dataframes, function descriptions and do not add calls to the function.
     When making calculations with floating points always make the results with max 2 decimal places.
+    IMPORTANT: When operating with dataframes always work with the latin (english) column names.
     IMPORTANT: Provide your answers with the bulgarian names (cyrilic descriptions) in the dataframe attributes.
 
     If you need to return a pd.Series, please convert it to a pd.DataFrame. 
@@ -164,6 +165,10 @@ def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_co
         if not isinstance(result, valid_types):
             raise TypeError(f"Function returned invalid type {type(result)}. Must be string, number, list or DataFrame")
             
+        # Ensure result is always a list
+        if not isinstance(result, list):
+            result = [{"dataframe": result} if isinstance(result, pd.DataFrame) else {"result": result}]
+            
         command = Command(
             update = {
                 "messages" : [
@@ -176,12 +181,14 @@ def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_co
         
     except Exception as e:
         error_message = f"Code execution failed: {str(e)}"
+        # Return error as a list item to maintain consistent structure
+        error_result = [{"error": error_message}]
         command = Command(
             update = {
                 "messages" : [
                     ToolMessage(error_message, tool_call_id = tool_call_id, is_error=True)
                 ],
-                "exec_result" : None
+                "exec_result" : error_result
             }
         )
         return command
