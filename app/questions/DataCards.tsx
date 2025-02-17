@@ -73,8 +73,9 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
   }
 
   const handleSend = (item: QuestionResponse) => {
-    const question = JSON.stringify(item, (key, value) => key === "id" ? undefined : value)
-    router.push(`/chat?question=${encodeURIComponent(question)}`)
+    const { question, response, goal } = item;
+    const questionData = JSON.stringify({ question, response, goal });
+    router.push(`/chat?question=${encodeURIComponent(questionData)}`)
   }
 
   const handleSendUser = (content: string) => {
@@ -266,7 +267,7 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
                 <PopoverContent className="w-full p-0" align="start">
                   <Command>
                     <div className="flex items-center justify-between p-2 border-b">
-                      <CommandInput placeholder="Search parameters..." className="h-9" />
+                      <CommandInput placeholder="Избор на параметри..." className="h-9" />
                       <button
                         onClick={(e) => {
                           e.preventDefault()
@@ -278,7 +279,7 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
                       </button>
                     </div>
                     <CommandList>
-                      <CommandEmpty>No parameters found.</CommandEmpty>
+                      <CommandEmpty>Не са избрани параметри.</CommandEmpty>
                       <CommandGroup>
                         {selectedParameters.map((parameter: Parameter) => (
                           <CommandItem
@@ -323,7 +324,7 @@ export const DataCards = ({parameters, exampleQuestions }: DataCardsProps) => {
             className="shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 py-2">
-              <CardTitle className="text-sm font-medium">Question {index + 1}</CardTitle>
+              <CardTitle className="text-sm font-medium">Въпрос {index + 1}</CardTitle>
               {item.type === "dataframe" ? (
                 <Table className="h-4 w-4 text-muted-foreground" />
               ) : (

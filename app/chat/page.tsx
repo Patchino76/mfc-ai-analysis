@@ -3,13 +3,13 @@ import { Textarea } from "@/components/ui/textarea"; // Add Textarea import
 import { Button } from "@/components/ui/button";
 import { ScrollArea} from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
-import { Send, Copy, User } from "lucide-react";
+import { Send, Copy, User, Loader2 } from "lucide-react";
 import { DataTable } from "./DataTable";
 import { CollapsibleImage } from "./CollapsibleImage";
 import { CollapsibleText } from "./CollapsibleText";
 import { useChatStore } from "../store/chatStore";
 import { useChat, ChatResponse, useExplanations } from "../hooks/useChat";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense } from "react";
 
@@ -44,7 +44,8 @@ const ChatPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const question = searchParams.get("question");
-  // const [curMessageIndex, setCurMessageIndex] = useState(0);
+  const [curMessageIndex, setCurMessageIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { 
     currentMessage, 
@@ -82,6 +83,8 @@ const ChatPageContent = () => {
       
       if (!currentMessage.trim()) return;
       
+      setIsLoading(true);
+      
       // Add user message to chat history
       const userMessage: TextMessage = {
           type: "text",
@@ -96,7 +99,10 @@ const ChatPageContent = () => {
               { query: currentMessage, messageIndex },
               {
                   onSuccess: (response: ChatResponse) => {
-                      if (!response.data) return;
+                      if (!response.data) {
+                          setIsLoading(false);
+                          return;
+                      }
                       
                       const data = response.data;
                       console.log("Received chat response:", data);
@@ -134,16 +140,12 @@ const ChatPageContent = () => {
                       // If there are more messages, fetch the next one
                       if (response.hasMore) {
                           fetchNextMessage(messageIndex + 1);
+                      } else {
+                          setIsLoading(false);
                       }
                   },
-                  onError: (error) => {
-                      console.error("Chat error:", error);
-                      const errorMessage: TextMessage = {
-                          type: "text",
-                          text: "Error processing your request",
-                          sender: "system"
-                      };
-                      addMessage(errorMessage);
+                  onError: () => {
+                      setIsLoading(false);
                   }
               }
           );
@@ -243,8 +245,16 @@ const ChatPageContent = () => {
                     }}
                   />
                   <div className="flex flex-col items-center space-y-2">
-                    <Button type="submit">
-                      <Send className="h-4 w-4" />
+                    <Button 
+                      type="submit" 
+                      size="icon" 
+                      disabled={isLoading || !currentMessage.trim()}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </form>

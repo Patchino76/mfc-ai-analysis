@@ -40,25 +40,26 @@ def parse_llm_response(response):
 
 def get_df_questions(query : str, params : str = ""):
     df_sample = create_data_prompt()
-    prompt = f""" You are an expert in data analysis and visualization. Your job is to generate 10 actionable analytical prompts based on a main analysis type, a dataframe description, and optional parameters (specific dataframe columns).
+    prompt = f"""Вие сте експерт в областта на анализа на данни и визуализацията. Вашата задача е да генерирате 10 практически аналитични запитвания, базирани на посочения основен тип анализ, описание на dataframe и допълнителни параметри (опционално, конкретни колони от dataframe).
 
-        Analysis Type: {query} Dataframe Description: {df_sample} Optional Parameters (Columns to emphasize): {params}
+        Основен тип анализ: {query}
+        Описание на dataframe: {df_sample}
+        Допълнителни параметри (колони за акцентиране): {params}
 
-        Instructions:
-
-        Interpret the analysis type provided in {query}.
-        Review the dataframe details in {df_sample} to understand its structure and available columns.
-        IF {params} is non-empty, generate questions using ONLY the specified columns. IF {params} is empty, generate general questions without referencing any specific columns from the dataframe.
-        Note: The analysis is intended for managers in the ore dressing mining industry, responsible for optimizing processes such as balls milling and copper flotation.
-        Generate 10 analytical prompts designed to produce either a dataframe or a graph. Each prompt should be tailored to further the analysis objective of {query}.
-        For every prompt, include:
-        "id": A number from 1 to 10.
-        "type": Specify "dataframe" or "graph" based on the expected result.
-        "content": A clear analytical question in Bulgarian.
-        "response": A description of the expected output (if a dataframe, mention columns and indexes; if a graph, mention the graph type, axis details, and any necessary groupings).
-        "goal": A brief statement of the insight or analytical objective to be achieved.
-        Return the results as a JSON array of prompt objects.
-        Example output: [ {{ "id": 1, "type": "dataframe", "content": "...", "response": "...", "goal": "..." }}, ... ] """
+        Инструкции:
+        1. Интерпретирайте основния тип анализ, посочен в {query}.
+        2. Прегледайте описанието на dataframe {df_sample}, за да разберете неговата структура и наличните колони.
+        3. Ако {params} не е празно, генерирайте запитвания, използвайки само посочените колони. Ако {params} е празно, генерирайте общи запитвания без препратки към конкретни колони.
+        4. Обърнете внимание, че анализите са предназначени за мениджъри в индустрията за рудно добиване, занимаващи се с оптимизиране на процеси като раздробяване и флотация на мед.
+        5. Създайте 10 аналитични запитвания, които могат да доведат до генериране на dataframe или графика. Всяко запитване трябва да насочва към постигане на целта от анализа {query}.
+        6. Всеки резултат трябва да включва следните ключове:
+            - "type": "dataframe" или "graph" в зависимост от очаквания резултат.
+            - "content": ясна аналитична запитване на български език.
+            - "response": описание на очаквания изход (ако е dataframe, посочете колони и индекси; ако е графика, посочете вид на графиката, информация за осите и необходимите групирания).
+            - "goal": кратко описание на целта или инсайта, който трябва да се постигне.
+        
+        Върнете резултатите като JSON масив от обекти с горепосочената структура.
+        Примерен изход: [ {{"type": "dataframe", "content": "...", "response": "...", "goal": "..." }}, ... ] """
 
     response = llm_gemini.generate_content(prompt)
     response_json = parse_llm_response(response.text)
@@ -72,10 +73,13 @@ def get_image_analysis(query: str, image_b64: str):
     prompt = f"""
         Ти си експертен анализатор на данни и графики в минната и обогатителната индустрия.
         Имаш задълбочено разбиране за процеси като средно и ситно трошене на медна руда, смилане с топкови мелници и флотация.
+        
         По-долу ти предоставям структурата на данните, която ще ти помогне да разкриеш контекста и спецификата на графиката:
         {df_structure}
+        
         Графиката, която ще анализираш, е генерирана въз основа на следните въпроси:
         {query}
+        
         Моля, дай анализ, като обръщаш специално внимание на значими тенденции, аномалии и критични показатели, които показват важната информация за процесите.
         Твоят анализ трябва да бъде кратък, ясен и насочен към подпомагане на екипите по поддръжка, технологите и мениджърите в предприятието за оптимизиране на производството.
         """

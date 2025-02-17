@@ -59,7 +59,7 @@ def generate_python_function(state : AgentState):
     Return only the Python function as a string and do not try to execute the code.
     Do not add sample dataframes, function descriptions and do not add calls to the function.
     When making calculations with floating points always make the results with max 2 decimal places.
-    If possible provide your answers with the bulgarian names (cyrilic descriptions) in the dataframe attributes.
+    IMPORTANT: Provide your answers with the bulgarian names (cyrilic descriptions) in the dataframe attributes.
 
     If you need to return a pd.Series, please convert it to a pd.DataFrame. 
     Place the index in the first column and the other in the second one before returning it.
