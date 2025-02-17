@@ -163,7 +163,7 @@ def get_combined_analysis(current_query: str, current_processed_results: list):
             prompt += f"\n\nГрафика {idx + 1}: Визуализация на данните"
     
     # Add final analysis instructions based on what we have
-    prompt += "\n\nМоля, направи задълбочен анализ, като:"
+    prompt += "\n\nМоля, направи кратък анализ, като исползваш българските наименования на параметрите:"
     if has_dataframes and has_graphs:
         prompt += """
         - Обедини информацията от таблиците и графиките в общ анализ
