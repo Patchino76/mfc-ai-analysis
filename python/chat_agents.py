@@ -124,25 +124,67 @@ def execute_code_tool(generated_code: Annotated[str, InjectedState("generated_co
     Returns:
         Any: The result of executing the function, which must be a string, number, list or a pd.DataFrame.
     """
-    function_body = generated_code
-    print("3 - Executing Function Body:")
-    print(function_body)
-    namespace = {}
-    exec("import pandas as pd\nimport matplotlib.pyplot as plt\nfrom io import BytesIO\nimport base64\nimport numpy as np\nimport seaborn as sns\nimport io\n", namespace)  # Import necessary modules
-    exec(function_body, namespace)
-
-    function_name = re.search(r"def\s+(\w+)\(", function_body).group(1)
-    result = namespace[function_name](full_df)
-    
-    command = Command(
-        update = {
-            "messages" : [
-                ToolMessage("Successfully executed the function.", tool_call_id = tool_call_id)
-            ],
-            "exec_result" : result
-        }
-    )
-    return command
+    try:
+        function_body = generated_code
+        print("3 - Executing Function Body:")
+        print(function_body)
+        
+        # Validate function definition
+        if not re.search(r"def\s+(\w+)\(", function_body):
+            raise ValueError("No valid function definition found in the generated code")
+            
+        namespace = {}
+        # Import necessary modules in a try block
+        try:
+            exec("import pandas as pd\nimport matplotlib.pyplot as plt\nfrom io import BytesIO\nimport base64\nimport numpy as np\nimport seaborn as sns\nimport io\n", namespace)
+        except ImportError as e:
+            raise ImportError(f"Failed to import required modules: {str(e)}")
+            
+        # Execute the function definition
+        try:
+            exec(function_body, namespace)
+        except SyntaxError as e:
+            raise SyntaxError(f"Syntax error in generated code: {str(e)}")
+        except Exception as e:
+            raise Exception(f"Error while defining the function: {str(e)}")
+            
+        # Extract and validate function name
+        function_name = re.search(r"def\s+(\w+)\(", function_body).group(1)
+        if function_name not in namespace:
+            raise NameError(f"Function '{function_name}' was not properly defined")
+            
+        # Execute the function
+        try:
+            result = namespace[function_name](full_df)
+        except Exception as e:
+            raise Exception(f"Error during function execution: {str(e)}")
+            
+        # Validate result type
+        valid_types = (str, int, float, list, pd.DataFrame)
+        if not isinstance(result, valid_types):
+            raise TypeError(f"Function returned invalid type {type(result)}. Must be string, number, list or DataFrame")
+            
+        command = Command(
+            update = {
+                "messages" : [
+                    ToolMessage("Successfully executed the function.", tool_call_id = tool_call_id)
+                ],
+                "exec_result" : result
+            }
+        )
+        return command
+        
+    except Exception as e:
+        error_message = f"Code execution failed: {str(e)}"
+        command = Command(
+            update = {
+                "messages" : [
+                    ToolMessage(error_message, tool_call_id = tool_call_id, is_error=True)
+                ],
+                "exec_result" : None
+            }
+        )
+        return command
 
 
 tools = [execute_code_tool]
@@ -190,5 +232,3 @@ def run_graph(query: str):
     print("exec_result: ", exec_result)
     print("Type of exec_result: ", type(exec_result))
     return exec_result
-
-
