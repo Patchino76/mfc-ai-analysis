@@ -44,7 +44,6 @@ const ChatPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const question = searchParams.get("question");
-  const [curMessageIndex, setCurMessageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const { 
@@ -141,7 +140,9 @@ const ChatPageContent = () => {
                       if (response.hasMore) {
                           fetchNextMessage(messageIndex + 1);
                       } else {
+                          // Reset loading state and message index when we're done
                           setIsLoading(false);
+                          setCurrentMessage("");
                       }
                   },
                   onError: () => {

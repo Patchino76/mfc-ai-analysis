@@ -70,43 +70,43 @@ async def get_chat(query: str, message_index: int = 0):
     # Decode URL-encoded query string
     decoded_query = unquote(query)
     
-    exec_result = run_graph(decoded_query)
-    print("Type of exec_result:", type(exec_result))
-    
-    # Check if exec_result is a list of dictionaries with dataframe or graph keys
-    if isinstance(exec_result, list) and all(
-        isinstance(item, dict) and ('dataframe' in item or 'graph' in item)
-        for item in exec_result
-    ):
-        processed_results = []
-        for item in exec_result:
-            processed_item = {}
-            if 'dataframe' in item and isinstance(item['dataframe'], pd.DataFrame):
-                df_dict = item['dataframe'].to_dict('records')
-                processed_item['dataframe'] = df_dict
-            elif 'graph' in item and isinstance(item['graph'], str) and is_base64_image(item['graph']):
-                processed_item['graph'] = item['graph']
-            else:
-                processed_item = item
-            processed_results.append(processed_item)
+    # Only run the graph when message_index is 0
+    if message_index == 0:
+        exec_result = run_graph(decoded_query)
+        print("Type of exec_result:", type(exec_result))
         
-        # Store in global variables
-        current_query = decoded_query
-        current_processed_results = processed_results
-        
-        # Return next message if available, otherwise return empty response
-        if message_index < len(processed_results):
-            return {
-                "data": processed_results[message_index],
-                "hasMore": message_index < len(processed_results) - 1
-            }
-        else:
-            return {
-                "data": None,
-                "hasMore": False
-            }
+        # Check if exec_result is a list of dictionaries with dataframe or graph keys
+        if isinstance(exec_result, list) and all(
+            isinstance(item, dict) and ('dataframe' in item or 'graph' in item)
+            for item in exec_result
+        ):
+            processed_results = []
+            for item in exec_result:
+                processed_item = {}
+                if 'dataframe' in item and isinstance(item['dataframe'], pd.DataFrame):
+                    df_dict = item['dataframe'].to_dict('records')
+                    processed_item['dataframe'] = df_dict
+                elif 'graph' in item and isinstance(item['graph'], str) and is_base64_image(item['graph']):
+                    processed_item['graph'] = item['graph']
+                else:
+                    processed_item = item
+                processed_results.append(processed_item)
+            
+            # Store in global variables
+            current_query = decoded_query
+            current_processed_results = processed_results
     
-    return False
+    # Return next message if available from current_processed_results
+    if current_processed_results and message_index < len(current_processed_results):
+        return {
+            "data": current_processed_results[message_index],
+            "hasMore": message_index < len(current_processed_results) - 1
+        }
+    else:
+        return {
+            "data": None,
+            "hasMore": False
+        }
 
 @app.get("/explanations")
 def get_explanations():
