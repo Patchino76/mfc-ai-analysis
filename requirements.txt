@@ -1,0 +1,15 @@
+fastapi>=0.104.0
+uvicorn>=0.24.0
+python-dotenv>=1.0.0
+langgraph>=0.0.30
+langchain>=0.0.330
+langchain-core>=0.1.0
+langchain-groq>=0.0.6
+langchain-ollama>=0.0.1
+matplotlib>=3.7.0
+seaborn>=0.13.0
+pandas>=2.0.0
+google-generativeai>=0.3.0
+numpy>=1.23.0
+pydantic>=2.4.0
+typing-extensions>=4.8.0
